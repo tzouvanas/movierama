@@ -3,3 +3,5 @@
 ################################################################################
 
 /Movierama.Services/obj
+/movierama.server/bin/Debug/netcoreapp3.1
+/movierama.server/obj
