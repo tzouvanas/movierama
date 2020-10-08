@@ -15,8 +15,9 @@ namespace Movierama.Server.Models
                 Id = movie.Id,
                 Title = movie.Title,
                 Description = movie.Description,
-                LikeCounter = 23,
-                HateCounter = 45,
+                LikeCount = 23,
+                HateCount = 45,
+                DaysPublished = (int)(DateTime.Today - movie.PublicationDate).TotalDays,
                 CanVote = movie.OwnerId != userId
             };
 

@@ -5,3 +5,4 @@
 /Movierama.Services/obj
 /movierama.server/bin/Debug/netcoreapp3.1
 /movierama.server/obj
+/movierama.server/bin/Release/netcoreapp3.1

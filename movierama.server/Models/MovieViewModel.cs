@@ -9,17 +9,17 @@ namespace Movierama.Server.Models
     {
         public int Id { get; set; }
 
+        public string OwnerFullName { get; set; }
+
         public string Title { get; set; }
 
         public string Description { get; set; }
 
-        public string FullDescription { get; set; }
+        public int DaysPublished { get; set; }
 
-        public string PublicationDate { get; set; }
+        public int LikeCount { get; set; }
 
-        public int LikeCounter { get; set; }
-
-        public int HateCounter { get; set; }
+        public int HateCount { get; set; }
 
         public bool CanVote { get; set; }
 

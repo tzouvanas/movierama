@@ -1,6 +1,32 @@
-﻿@model List<Movierama.Server.Models.MovieViewModel>
+﻿@using Microsoft.AspNetCore.Identity
+@using Movierama.Server.Database.Entities
+@model List<Movierama.Server.Models.MovieViewModel>
+@inject SignInManager<MovieramaIdentityUser> SignInManager
 @{
     ViewData["Title"] = "MovieRama";
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(window).scroll(function () {
+
+                console.log("scroll triggered");
+
+                console.log($(window).scrollTop());
+
+                console.log($(window).height());
+
+                console.log($(document).height());
+
+                if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+                    alert("END!");
+                }
+                console.log("condition not triggered");
+            })
+        });  //These are what you are missing above.
+    </script>
 }
 
 <div class="text-center">
@@ -13,8 +39,20 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">@movieViewModel.Title</h5>
+
+            <p class="card-text">Posted by: @movieViewModel.OwnerFullName @movieViewModel.DaysPublished days ago</p>
+
             <p class="card-text">@movieViewModel.Description</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <div>
+                <h7 class="card-subtitle mb-2">@movieViewModel.LikeCount Likes  |  </h7>
+                <h7 class="card-subtitle mb-2">@movieViewModel.HateCount Hates</h7>
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a href="#" class="card-link text-right">Like</a>
+                    <a href="#" class="card-link text-right">Hate</a>
+                }
+            </div>
         </div>
     </div>
 }
