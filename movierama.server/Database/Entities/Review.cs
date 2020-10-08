@@ -17,9 +17,8 @@ namespace movierama.server.Models
     public class Review
     {
         [Key]
-        int UserId { get; set; }
+        public int UserId { get; set; }
         
-        [Key]
         public int MovieId { get; set; }
 
         public Movie Movie { get; set; }

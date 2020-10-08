@@ -11,8 +11,12 @@ namespace movierama.server.Models
         [Key]
         public int Id { get; set; }
 
+        public int OwnerId { get; set; }
+
         public string Title { get; set; }
 
         public DateTime PublicationDate { get; set; }
+
+        public string Description { get; internal set; }
     }
 }

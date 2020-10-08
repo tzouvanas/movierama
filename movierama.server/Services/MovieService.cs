@@ -20,10 +20,22 @@ namespace Movierama.Server.Services
         public List<Movie> GetMovies(string sortOrder) 
         {
             List<Movie> movies = null;
-            var connectionString = this._configuration.GetConnectionString("DefaultConnection");
-            using (MovieramaDbContext context = new MovieramaDbContext(connectionString))
+            using (MovieramaDbContext context = new MovieramaDbContext(this._configuration))
             {
                 IQueryable<Movie> movieQuery = context.Movies;
+                movieQuery = this.ApplySorting(movieQuery, sortOrder);
+                movies = movieQuery.ToList();
+            }
+
+            return movies;
+        }
+
+        public List<Movie> GetMoviesOfUser(int userId, string sortOrder)
+        {
+            List<Movie> movies = null;
+            using (MovieramaDbContext context = new MovieramaDbContext(this._configuration))
+            {
+                IQueryable<Movie> movieQuery = context.Movies.Where(m => m.OwnerId == userId);
                 movieQuery = this.ApplySorting(movieQuery, sortOrder);
                 movies = movieQuery.ToList();
             }
@@ -57,8 +69,7 @@ namespace Movierama.Server.Services
         {
             DescriptionOfMovie descriptionOfMovie = null;
 
-            var connectionString = this._configuration.GetConnectionString("DefaultConnection");
-            using (MovieramaDbContext context = new MovieramaDbContext(connectionString)) 
+            using (MovieramaDbContext context = new MovieramaDbContext(this._configuration)) 
             {
                 descriptionOfMovie = context.DescriptionOfMovies
                     .Where(item => item.MovieId == movieId)

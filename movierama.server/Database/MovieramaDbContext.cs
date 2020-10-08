@@ -12,9 +12,9 @@ namespace movierama.server.Models
     {
         private readonly string connectionString;
 
-        public MovieramaDbContext(string connectionString)
+        public MovieramaDbContext(IConfiguration configuration)
         {
-            this.connectionString = connectionString;
+            this.connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
