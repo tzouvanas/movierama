@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Movierama.Server.Repositories
+namespace Movierama.Server
 {
-    public class UserRepository
+    public class MemoeryCache : ICache
     {
     }
 }

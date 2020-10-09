@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Movierama.Server.Database.Entities
+namespace Movierama.Server.Database
 {
-    public class MovieramaIdentityUser : IdentityUser
+    public class ApplicationIdentityUser : IdentityUser
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? UserId { get; set; }

@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using Movierama.Server.Database.Entities 
-@inject SignInManager<MovieramaIdentityUser> SignInManager
-@inject UserManager<MovieramaIdentityUser> UserManager
+@using Movierama.Server.Database
+@inject SignInManager<ApplicationIdentityUser> SignInManager
+@inject UserManager<ApplicationIdentityUser> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))

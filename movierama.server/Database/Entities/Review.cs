@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace movierama.server.Models
+namespace Movierama.Server.Database.Entities
 {
     public enum ReviewType{
 

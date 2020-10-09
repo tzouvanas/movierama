@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using movierama.server.Models;
-using Movierama.Server.Database.Entities;
+using Movierama.Server.Database;
 using Movierama.Server.Models;
 using Movierama.Server.Services;
 
@@ -22,10 +22,10 @@ namespace movierama.server.Controllers
         private readonly IConfiguration configuration;
         private readonly IServiceProvider serviceProvider;
         private readonly ILogger<HomeController> logger;
-        private readonly UserManager<MovieramaIdentityUser> userManager;
+        private readonly UserManager<ApplicationIdentityUser> userManager;
 
         public HomeController(ILogger<HomeController> logger, IConfiguration configuration,
-            UserManager<MovieramaIdentityUser> userManager, IServiceProvider serviceProvider)
+            UserManager<ApplicationIdentityUser> userManager, IServiceProvider serviceProvider)
         {
             this.logger = logger;
             this.configuration = configuration;

@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using movierama.server.Models;
-using Movierama.Server.Database.Entities;
+using Movierama.Server.Database;
 
 namespace movierama.server
 {
@@ -35,10 +35,10 @@ namespace movierama.server
 
             services.AddDbContext<MoviesDbContext>(options => options.UseSqlServer(defaultConnectionString));
 
-            services.AddDefaultIdentity<MovieramaIdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<ApplicationIdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<AuthenticationDbContext>();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddRazorPages();
 
             services.AddHttpContextAccessor();

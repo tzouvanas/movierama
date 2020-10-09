@@ -17,16 +17,6 @@ namespace movierama.server
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-
-            using (var scope = host.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<AuthenticationDbContext>();
-                db.Database.Migrate();
-
-                var db2 = scope.ServiceProvider.GetRequiredService<MoviesDbContext>();
-                db2.Database.Migrate();
-            }
-
             host.Run();
         }
 

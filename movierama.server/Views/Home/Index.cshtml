@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using Movierama.Server.Database.Entities
+@using Movierama.Server.Database
 @model List<Movierama.Server.Models.MovieViewModel>
-@inject SignInManager<MovieramaIdentityUser> SignInManager
+@inject SignInManager<ApplicationIdentityUser> SignInManager
 @{
     ViewData["Title"] = "MovieRama";
 }
@@ -9,15 +9,49 @@
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
+
+            // end of page detection
             $(window).scroll(function () {
-                if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
-                    alert("END!");
+                if ($(window).scrollTop() + $(window).height() - 20 >= $(document).height()) {
+                    alert("End of page ...");
                 }
-            })
-        });  //These are what you are missing above.
+            });
+
+            // review click
+            $('.review-movie').click(function (event) {
+                event.preventDefault();
+                likeBehavior = event.target.id.startsWith("Like");
+                $.ajax({
+                    url: '/api/review',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    type: 'GET',
+                    data: { movieId: 5, like: true },
+                    success: function (data, textStatus, xhr) {
+                        console.log('review send ...');
+
+                        if (likeBehavior) {
+                            // hide hate group
+                            // show Like_Description element
+                            // hide like button
+                            // show unlide button
+                        }
+                        else {
+                            // hide hate group
+                        }
+                        document.getElementById(event.target.id).hidden = true;
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+                return false;
+            });
+        });
     </script>
 }
-
+<!-- Search Bar -->
 <div class="d-flex alert alert-primary" role="alert">
     <div>Sort by :</div>
     <div>&nbsp</div>
@@ -30,7 +64,7 @@
     <div>&nbsp</div>
     <div><a href="#SortByLikes">Hates</a></div>
 </div>
-
+<!-- Search Results -->
 @foreach (var movieViewModel in Model)
 {
     <div class="card">
@@ -50,11 +84,18 @@
                 <div>&nbsp</div>
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <div><h7><a href="#LikeMovie">Like</a></h7></div>
-                    <div>&nbsp</div>
-                    <div>|</div>
-                    <div>&nbsp</div>
-                    <div><h7><a href="#HateMovie">Hate</a></h7></div>
+                    <div id="LikeGroup_@movieViewModel.Id" class="d-flex">
+                        <div><h7><a id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
+                        <div><h7><a id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
+                        <div id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
+                        <div>&nbsp</div>
+                    </div>
+                    <div id="HateGroup_@movieViewModel.Id" class="d-flex">
+                        <div>&nbsp</div>
+                        <div><h7><a id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
+                        <div><h7><a id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
+                        <div id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
+                    </div>
                 }
             </div>
         </div>
