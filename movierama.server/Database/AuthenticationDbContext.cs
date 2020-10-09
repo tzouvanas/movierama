@@ -7,9 +7,9 @@ using Movierama.Server.Database.Entities;
 
 namespace movierama.server.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<MovieramaIdentityUser>
+    public class AuthenticationDbContext : IdentityDbContext<MovieramaIdentityUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public AuthenticationDbContext(DbContextOptions<AuthenticationDbContext> options)
             : base(options)
         {
         }

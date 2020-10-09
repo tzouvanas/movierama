@@ -10,7 +10,7 @@ namespace Movierama.Server.Database.Entities
     public class MovieramaIdentityUser : IdentityUser
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserId { get;  }
+        public int? UserId { get; set; }
 
         public string FirstName { get; set; }
 

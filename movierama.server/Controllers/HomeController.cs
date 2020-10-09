@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using movierama.server.Models;
 using Movierama.Server.Database.Entities;
@@ -18,15 +19,17 @@ namespace movierama.server.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration configuration;
+        private readonly IServiceProvider serviceProvider;
         private readonly ILogger<HomeController> logger;
         private readonly UserManager<MovieramaIdentityUser> userManager;
 
         public HomeController(ILogger<HomeController> logger, IConfiguration configuration,
-            UserManager<MovieramaIdentityUser> userManager)
+            UserManager<MovieramaIdentityUser> userManager, IServiceProvider serviceProvider)
         {
             this.logger = logger;
-            this._configuration = configuration;
+            this.configuration = configuration;
+            this.serviceProvider = serviceProvider;
             this.userManager = userManager;
         }
 
@@ -38,7 +41,9 @@ namespace movierama.server.Controllers
             if (user.Result != null)
                 userId = user.Result.UserId;
 
-            var movieService = new MovieService(this._configuration);
+            var context = this.serviceProvider.GetRequiredService<MoviesDbContext>();
+
+            var movieService = new MovieRepository(context);
             var movies = movieService.GetMovies("");
 
             var mapper = new MovieModelViewModelMapper();

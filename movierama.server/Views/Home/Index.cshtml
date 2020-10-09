@@ -9,29 +9,26 @@
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-
             $(window).scroll(function () {
-
-                console.log("scroll triggered");
-
-                console.log($(window).scrollTop());
-
-                console.log($(window).height());
-
-                console.log($(document).height());
-
                 if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
                     alert("END!");
                 }
-                console.log("condition not triggered");
             })
         });  //These are what you are missing above.
     </script>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="d-flex alert alert-primary" role="alert">
+    <div>Sort by :</div>
+    <div>&nbsp</div>
+    <div>&nbsp</div>
+    <div><a href="#SortByPublicationDate">Publication Date</a></div>
+    <div>&nbsp</div>
+    <div>&nbsp</div>
+    <div><a href="#SortByLikes">Likes</a></div>
+    <div>&nbsp</div>
+    <div>&nbsp</div>
+    <div><a href="#SortByLikes">Hates</a></div>
 </div>
 
 @foreach (var movieViewModel in Model)
@@ -43,14 +40,21 @@
             <p class="card-text">Posted by: @movieViewModel.OwnerFullName @movieViewModel.DaysPublished days ago</p>
 
             <p class="card-text">@movieViewModel.Description</p>
-            <div>
-                <h7 class="card-subtitle mb-2">@movieViewModel.LikeCount Likes  |  </h7>
-                <h7 class="card-subtitle mb-2">@movieViewModel.HateCount Hates</h7>
 
+            <div class="d-flex">
+                <div><h7 class="flex-grow-1">@movieViewModel.LikeCount Likes</h7></div>
+                <div>&nbsp</div>
+                <div>&nbsp</div>
+                <div><h7 class="flex-grow-1">@movieViewModel.HateCount Hates</h7></div>
+                <div>&nbsp</div>
+                <div>&nbsp</div>
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <a href="#" class="card-link text-right">Like</a>
-                    <a href="#" class="card-link text-right">Hate</a>
+                    <div><h7><a href="#LikeMovie">Like</a></h7></div>
+                    <div>&nbsp</div>
+                    <div>|</div>
+                    <div>&nbsp</div>
+                    <div><h7><a href="#HateMovie">Hate</a></h7></div>
                 }
             </div>
         </div>

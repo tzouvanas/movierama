@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using movierama.server.Models;
 
 namespace movierama.server
 {
@@ -13,7 +16,18 @@ namespace movierama.server
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AuthenticationDbContext>();
+                db.Database.Migrate();
+
+                var db2 = scope.ServiceProvider.GetRequiredService<MoviesDbContext>();
+                db2.Database.Migrate();
+            }
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

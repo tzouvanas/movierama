@@ -29,11 +29,15 @@ namespace movierama.server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<MovieramaIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            var defaultConnectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddDbContext<AuthenticationDbContext>(options =>options.UseSqlServer(defaultConnectionString));
+
+            services.AddDbContext<MoviesDbContext>(options => options.UseSqlServer(defaultConnectionString));
+
+            services.AddDefaultIdentity<MovieramaIdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<AuthenticationDbContext>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
 
