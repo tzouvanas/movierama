@@ -8,22 +8,15 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server.Database.Entities
 {
-    public enum ReviewOpinion{
-
-        Like = 1,
-        Neutral = 0,
-        Hate = -1,
-    }
-
     public class Review
     {
         [Key]
-        public int UserId { get; set; }
-        
+        public string UserId { get; set; }
+
+        [Key]
         public int MovieId { get; set; }
 
-        public Movie Movie { get; set; }
 
-        public ReviewOpinion Type { get; set; }
+        public int Opinion { get; set; }
     }
 }

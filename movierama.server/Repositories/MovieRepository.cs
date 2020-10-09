@@ -39,7 +39,7 @@ namespace Movierama.Server.Services
             return movies;
         }
 
-        public List<Movie> GetMoviesOfUser(int userId, string sortOrder)
+        public List<Movie> GetMoviesOfUser(string userId, string sortOrder)
         {
             List<Movie> movies = null;
             IQueryable<Movie> movieQuery = context.Movies.Where(m => m.OwnerId == userId);

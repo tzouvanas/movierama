@@ -44,7 +44,7 @@
                         'Content-Type': 'application/json'
                     },
                     type: 'GET',
-                    data: { movieId: 5, like: true },
+                    data: { movieId: movieId, opinion: userOpinion },
                     success: function (data, textStatus, xhr) {
                         adjustLikeHateVisibility(userOpinion, movieId);
                     },

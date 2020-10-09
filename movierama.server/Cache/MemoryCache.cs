@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server
 {
-    public class MemoeryCache : ICache
+    public class MemoryCache : ICache
     {
     }
 }

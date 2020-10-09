@@ -16,13 +16,16 @@ namespace movierama.server.Models
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Review>().HasKey(r => new { r.MovieId, r.UserId});
+        }
+
         public DbSet<DescriptionOfMovie> DescriptionOfMovies { get; set; }
 
         public DbSet<CountersOfMovie> CountersOfMovies { get; set; }
 
         public DbSet<Movie> Movies { get; set; }
-
-        public DbSet<User> Users { get; set; }
 
         public DbSet<Review> Reviews { get; set; }
     }

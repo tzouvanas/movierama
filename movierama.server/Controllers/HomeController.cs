@@ -35,11 +35,7 @@ namespace movierama.server.Controllers
 
         public IActionResult Index()
         {
-            var user = this.userManager.GetUserAsync(this.User);
-
-            int? userId = null;
-            if (user.Result != null)
-                userId = user.Result.UserId;
+            var userId= this.userManager.GetUserId(HttpContext.User);
 
             var context = this.serviceProvider.GetService<MoviesDbContext>();
             var movieService = new MovieRepository(context);

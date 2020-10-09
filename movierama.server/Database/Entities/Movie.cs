@@ -11,7 +11,7 @@ namespace Movierama.Server.Database.Entities
         [Key]
         public int Id { get; set; }
 
-        public int OwnerId { get; set; }
+        public string OwnerId { get; set; }
 
         public string Title { get; set; }
 
