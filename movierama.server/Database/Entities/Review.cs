@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server.Database.Entities
 {
-    public enum ReviewType{
+    public enum ReviewOpinion{
 
-        Negative = -1,
+        Like = 1,
         Neutral = 0,
-        Positive = 1,
+        Hate = -1,
     }
 
     public class Review
@@ -24,6 +24,6 @@ namespace Movierama.Server.Database.Entities
 
         public Movie Movie { get; set; }
 
-        public ReviewType Type { get; set; }
+        public ReviewOpinion Type { get; set; }
     }
 }

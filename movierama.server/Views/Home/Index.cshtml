@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Movierama.Server.Database
-@model List<Movierama.Server.Models.MovieViewModel>
+@model List<Movierama.Server.Models.MovieModel>
 @inject SignInManager<ApplicationIdentityUser> SignInManager
 @{
     ViewData["Title"] = "MovieRama";
@@ -8,6 +8,43 @@
 
 @section Scripts {
     <script type="text/javascript">
+
+        function adjustLikeHateVisibility(userSelection) {
+            if (userSelection == 'Like') {
+                // hide Like Button, Show Unlike Button, Show Description
+                document.getElementById("Like_" + movieId.toString()).hidden = true;
+                document.getElementById("Unlike_" + movieId.toString()).hidden = false;
+                document.getElementById("Like_Description_" + movieId.toString()).hidden = false;
+
+                // Hide Like Button, Show Unlike Button, Show Description
+                document.getElementById("Hate_" + movieId.toString()).hidden = true;
+                document.getElementById("Unhate_" + movieId.toString()).hidden = true;
+                document.getElementById("Hate_Description_" + movieId.toString()).hidden = true;
+            }
+            else if (userSelection == 'Hate') {
+                // hide Like Button, Show Unlike Button, Show Description
+                document.getElementById("Hate_" + movieId.toString()).hidden = true;
+                document.getElementById("Unhate_" + movieId.toString()).hidden = false;
+                document.getElementById("Hate_Description_" + movieId.toString()).hidden = false;
+
+                document.getElementById("Like_" + movieId.toString()).hidden = true;
+                document.getElementById("Unlike_" + movieId.toString()).hidden = true;
+                document.getElementById("Like_Description_" + movieId.toString()).hidden = true;
+
+            }
+            else {
+                // Hide Like Button, Show Unlike Button, Show Description
+                document.getElementById("Like_" + movieId.toString()).hidden = false;
+                document.getElementById("Unlike_" + movieId.toString()).hidden = true;
+                document.getElementById("Like_Description_" + movieId.toString()).hidden = true;
+
+                // Hide Like Button, Show Unlike Button, Show Description
+                document.getElementById("Hate_" + movieId.toString()).hidden = false;
+                document.getElementById("Unhate_" + movieId.toString()).hidden = true;
+                document.getElementById("Hate_Description_" + movieId.toString()).hidden = true;
+            }
+        }
+
         $(document).ready(function () {
 
             // end of page detection
@@ -19,8 +56,10 @@
 
             // review click
             $('.review-movie').click(function (event) {
+
                 event.preventDefault();
-                likeBehavior = event.target.id.startsWith("Like");
+                movieId = event.target.id.toString().split('_')[1];
+                userOpinion = event.target.id.toString().split('_')[0];
                 $.ajax({
                     url: '/api/review',
                     headers: {
@@ -29,18 +68,7 @@
                     type: 'GET',
                     data: { movieId: 5, like: true },
                     success: function (data, textStatus, xhr) {
-                        console.log('review send ...');
-
-                        if (likeBehavior) {
-                            // hide hate group
-                            // show Like_Description element
-                            // hide like button
-                            // show unlide button
-                        }
-                        else {
-                            // hide hate group
-                        }
-                        document.getElementById(event.target.id).hidden = true;
+                        adjustLikeHateVisibility(userOpinion);
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -56,13 +84,13 @@
     <div>Sort by :</div>
     <div>&nbsp</div>
     <div>&nbsp</div>
-    <div><a href="#SortByPublicationDate">Publication Date</a></div>
+    <div id="SortByPublicationDate"><a href="#SortByPublicationDate">Publication Date</a></div>
     <div>&nbsp</div>
     <div>&nbsp</div>
-    <div><a href="#SortByLikes">Likes</a></div>
+    <div id="SortByLikes"><a href="#SortByLikes">Likes</a></div>
     <div>&nbsp</div>
     <div>&nbsp</div>
-    <div><a href="#SortByLikes">Hates</a></div>
+    <div id="SortByHates"><a href="#SortByHates">Hates</a></div>
 </div>
 <!-- Search Results -->
 @foreach (var movieViewModel in Model)
@@ -84,18 +112,14 @@
                 <div>&nbsp</div>
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <div id="LikeGroup_@movieViewModel.Id" class="d-flex">
-                        <div><h7><a id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
-                        <div><h7><a id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
-                        <div id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
-                        <div>&nbsp</div>
-                    </div>
-                    <div id="HateGroup_@movieViewModel.Id" class="d-flex">
-                        <div>&nbsp</div>
-                        <div><h7><a id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
-                        <div><h7><a id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
-                        <div id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
-                    </div>
+                    <div><h7><a id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
+                    <div><h7><a id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
+                    <div id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
+                    <div>&nbsp</div>
+                    <div>&nbsp</div>
+                    <div><h7><a id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
+                    <div><h7><a id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
+                    <div id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
                 }
             </div>
         </div>

@@ -13,12 +13,23 @@ namespace Movierama.Server.Services
     {
         private readonly MoviesDbContext context;
 
-        public MovieRepository(MoviesDbContext dbContext)
+        public MovieRepository(MoviesDbContext context)
         {
-            this.context = dbContext;
+            this.context = context;
         }
 
         public List<Movie> GetMovies(string sortOrder)
+        {
+
+            List<Movie> movies = null;
+            IQueryable<Movie> movieQuery = context.Movies;
+            movieQuery = this.ApplySorting(movieQuery, sortOrder);
+            movies = movieQuery.ToList();
+
+            return movies;
+        }
+
+        public List<Movie> GetMoviesOfUser(string sortOrder, int userId)
         {
             List<Movie> movies = null;
             IQueryable<Movie> movieQuery = context.Movies;

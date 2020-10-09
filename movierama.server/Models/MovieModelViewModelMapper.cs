@@ -9,9 +9,9 @@ namespace Movierama.Server.Models
 {
     public class MovieModelViewModelMapper
     {
-        public MovieViewModel Map(Movie movie, int? userId) 
+        public MovieModel Map(Movie movie, int? userId) 
         {
-            var viewModel = new MovieViewModel
+            var viewModel = new MovieModel
             {
                 Id = movie.Id,
                 Title = movie.Title,
@@ -25,9 +25,9 @@ namespace Movierama.Server.Models
             return viewModel;
         }
 
-        public List<MovieViewModel> Map(List<Movie> movies, int? userId) 
+        public List<MovieModel> Map(List<Movie> movies, int? userId) 
         {
-            var viewModelList = new List<MovieViewModel>();
+            var viewModelList = new List<MovieModel>();
             foreach (var movie in movies)
                 viewModelList.Add(this.Map(movie, userId));
 

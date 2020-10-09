@@ -41,8 +41,7 @@ namespace movierama.server.Controllers
             if (user.Result != null)
                 userId = user.Result.UserId;
 
-            var context = this.serviceProvider.GetRequiredService<MoviesDbContext>();
-
+            var context = this.serviceProvider.GetService<MoviesDbContext>();
             var movieService = new MovieRepository(context);
             var movies = movieService.GetMovies("");
 
