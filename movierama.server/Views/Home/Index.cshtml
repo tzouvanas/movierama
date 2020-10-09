@@ -9,47 +9,22 @@
 @section Scripts {
     <script type="text/javascript">
 
-        function adjustLikeHateVisibility(userSelection) {
-            if (userSelection == 'Like') {
-                // hide Like Button, Show Unlike Button, Show Description
-                document.getElementById("Like_" + movieId.toString()).hidden = true;
-                document.getElementById("Unlike_" + movieId.toString()).hidden = false;
-                document.getElementById("Like_Description_" + movieId.toString()).hidden = false;
+        function adjustLikeHateVisibility(userOpinion, movieId) {
 
-                // Hide Like Button, Show Unlike Button, Show Description
-                document.getElementById("Hate_" + movieId.toString()).hidden = true;
-                document.getElementById("Unhate_" + movieId.toString()).hidden = true;
-                document.getElementById("Hate_Description_" + movieId.toString()).hidden = true;
-            }
-            else if (userSelection == 'Hate') {
-                // hide Like Button, Show Unlike Button, Show Description
-                document.getElementById("Hate_" + movieId.toString()).hidden = true;
-                document.getElementById("Unhate_" + movieId.toString()).hidden = false;
-                document.getElementById("Hate_Description_" + movieId.toString()).hidden = false;
+            document.getElementById("Hate_" + movieId.toString()).hidden = userOpinion != 'Neutral';
+            document.getElementById("Unhate_" + movieId.toString()).hidden = userOpinion != 'Hate';
+            document.getElementById("Hate_Description_" + movieId.toString()).hidden = userOpinion != 'Hate';
 
-                document.getElementById("Like_" + movieId.toString()).hidden = true;
-                document.getElementById("Unlike_" + movieId.toString()).hidden = true;
-                document.getElementById("Like_Description_" + movieId.toString()).hidden = true;
-
-            }
-            else {
-                // Hide Like Button, Show Unlike Button, Show Description
-                document.getElementById("Like_" + movieId.toString()).hidden = false;
-                document.getElementById("Unlike_" + movieId.toString()).hidden = true;
-                document.getElementById("Like_Description_" + movieId.toString()).hidden = true;
-
-                // Hide Like Button, Show Unlike Button, Show Description
-                document.getElementById("Hate_" + movieId.toString()).hidden = false;
-                document.getElementById("Unhate_" + movieId.toString()).hidden = true;
-                document.getElementById("Hate_Description_" + movieId.toString()).hidden = true;
-            }
+            document.getElementById("Like_" + movieId.toString()).hidden = userOpinion != 'Neutral';
+            document.getElementById("Unlike_" + movieId.toString()).hidden = userOpinion != 'Like';
+            document.getElementById("Like_Description_" + movieId.toString()).hidden = userOpinion != 'Like';
         }
 
         $(document).ready(function () {
 
             // end of page detection
             $(window).scroll(function () {
-                if ($(window).scrollTop() + $(window).height() - 20 >= $(document).height()) {
+                if ($(window).scrollTop() + $(window).height() + 20 >= $(document).height()) {
                     alert("End of page ...");
                 }
             });
@@ -60,6 +35,9 @@
                 event.preventDefault();
                 movieId = event.target.id.toString().split('_')[1];
                 userOpinion = event.target.id.toString().split('_')[0];
+                if (userOpinion != "Like" && userOpinion != "Hate")
+                    userOpinion = "Neutral"
+
                 $.ajax({
                     url: '/api/review',
                     headers: {
@@ -68,7 +46,7 @@
                     type: 'GET',
                     data: { movieId: 5, like: true },
                     success: function (data, textStatus, xhr) {
-                        adjustLikeHateVisibility(userOpinion);
+                        adjustLikeHateVisibility(userOpinion, movieId);
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -79,6 +57,37 @@
         });
     </script>
 }
+
+@functions{
+    public string HiddenAttribute(string element, string userOpinion)
+    {
+        bool shouldBeHidden = false;
+
+        switch (element)
+        {
+            case "Hate":
+            case "Like":
+                shouldBeHidden = userOpinion != "Neutral";
+                break;
+
+            case "Unhate":
+            case "Hate_Description":
+                shouldBeHidden = userOpinion != "Hate";
+                break;
+
+            case "Unlike":
+            case "Like_Description":
+                shouldBeHidden = userOpinion != "Like";
+                break;
+        }
+
+        if (shouldBeHidden)
+            return "hidden";
+
+        return string.Empty;
+    }
+}
+
 <!-- Search Bar -->
 <div class="d-flex alert alert-primary" role="alert">
     <div>Sort by :</div>
@@ -110,18 +119,20 @@
                 <div><h7 class="flex-grow-1">@movieViewModel.HateCount Hates</h7></div>
                 <div>&nbsp</div>
                 <div>&nbsp</div>
+
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <div><h7><a id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
-                    <div><h7><a id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
-                    <div id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
+                    <div><h7><a @this.HiddenAttribute("Like", @movieViewModel.ReviewOpinion.ToString()) id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
+                    <div><h7><a @this.HiddenAttribute("Unlike", @movieViewModel.ReviewOpinion.ToString()) id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
+                    <div @this.HiddenAttribute("Like_Description", @movieViewModel.ReviewOpinion.ToString()) id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
                     <div>&nbsp</div>
                     <div>&nbsp</div>
-                    <div><h7><a id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
-                    <div><h7><a id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
-                    <div id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
+                    <div><h7><a @this.HiddenAttribute("Hate", @movieViewModel.ReviewOpinion.ToString()) id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
+                    <div><h7><a @this.HiddenAttribute("Unhate", @movieViewModel.ReviewOpinion.ToString()) id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
+                    <div @this.HiddenAttribute("Hate_Description", @movieViewModel.ReviewOpinion.ToString()) id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
                 }
             </div>
         </div>
     </div>
 }
+

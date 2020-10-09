@@ -1,7 +1,7 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
+.vs
 /Movierama.Services/obj
 /movierama.server/bin/Debug/netcoreapp3.1
 /movierama.server/obj
