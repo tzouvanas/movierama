@@ -12,29 +12,40 @@ using Microsoft.Extensions.Configuration;
 namespace Movierama.Server.Quartz
 {
     [DisallowConcurrentExecution]
-    public class PersistReviewsJob : IJob
+    public class PersistReviewActionsJob : IJob
     {
         private readonly IServiceProvider serviceProvider;
         private readonly IConfiguration configuration;
-        private readonly ILogger<PersistReviewsJob> _logger;
-        public PersistReviewsJob(ILogger<PersistReviewsJob> logger, 
+        private readonly ILogger<PersistReviewActionsJob> logger;
+        public PersistReviewActionsJob(ILogger<PersistReviewActionsJob> logger, 
             IServiceProvider serviceProvider, 
             IConfiguration configuration)
         {
-            _logger = logger;
+            this.logger = logger;
             this.serviceProvider = serviceProvider;
             this.configuration = configuration;
         }
         public Task Execute(IJobExecutionContext context)
         {
-            var reviewRepository = new ReviewRepository(this.configuration);
+            
             var reviewCache = this.serviceProvider.GetService<ReviewCache>();
 
             // TODO : consider batch update instead of review by review update
-            foreach (string userId in reviewCache.Data.Keys) {
-                foreach (int movieId in reviewCache.Data[userId].Keys) {
-                    var opinion = reviewCache.Data[userId][movieId];
-                    reviewRepository.PersistReview(userId, movieId, (ReviewAction)opinion);
+            foreach (string userId in reviewCache.Data.Keys) 
+            {
+                foreach (int movieId in reviewCache.Data[userId].Keys) 
+                {
+                    var reviewActionQueue = reviewCache.Data[userId][movieId];
+
+                    if (reviewActionQueue.Count == 0) continue;
+
+                    while (reviewActionQueue.Count > 0) 
+                    {
+                        var reviewRepository = new ReviewRepository(this.configuration);
+                        var reviewAction = reviewActionQueue.Peek();
+                        reviewRepository.PersistReview(userId, movieId, (ReviewAction)reviewAction);
+                        reviewActionQueue.Dequeue();
+                    }
                 }
             }
 

@@ -100,11 +100,16 @@
             <div>&nbsp</div>
             <div id="SortByPublicationDate"><a href="#SortByPublicationDate">Publication Date</a></div>
             <div>&nbsp</div>
+            <div>|</div>
             <div>&nbsp</div>
             <div id="SortByLikes"><a href="#SortByLikes">Likes</a></div>
             <div>&nbsp</div>
+            <div>|</div>
             <div>&nbsp</div>
             <div id="SortByHates"><a href="#SortByHates">Hates</a></div>
+            <div>&nbsp</div>
+            <div>|</div>
+            <div>&nbsp</div>
         </div>
         <!-- Search Results -->
         @foreach (var movieViewModel in Model)
@@ -113,7 +118,7 @@
                 <div class="card-body">
                     <h5 class="card-title">@movieViewModel.Title</h5>
 
-                    <p class="card-text">Posted by: @movieViewModel.OwnerFullName @movieViewModel.PublicationDuration @movieViewModel.UnitOfPulicationDuration ago</p>
+                    <p class="card-text">Posted by: <a href="SearchWithOwnerId">@movieViewModel.OwnerFullName</a> @movieViewModel.PublicationDuration @movieViewModel.UnitOfPulicationDuration ago</p>
 
                     <p class="card-text">@movieViewModel.Description</p>
 

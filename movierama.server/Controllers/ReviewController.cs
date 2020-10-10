@@ -36,15 +36,15 @@ namespace Movierama.Server.Controllers
 
         public void Review(int movieId, string reviewAction)
         {
-            var opinionValue = Enum.Parse<ReviewAction>(reviewAction);
+            var reviewActionValue = Enum.Parse<ReviewAction>(reviewAction);
             var userId = this.userManager.GetUserId(HttpContext.User);
 
             // record in memory
             var reviewCache = this.serviceProvider.GetService<ReviewCache>();
-            reviewCache.RecordReview(userId, movieId, (int) opinionValue);
+            reviewCache.RecordReviewAction(userId, movieId, (int)reviewActionValue);
 
-            var reviewRepository = new ReviewRepository(this.serviceProvider);
-            reviewRepository.PersistReview(userId, movieId, opinionValue);
+            // var reviewRepository = new ReviewRepository(this.serviceProvider);
+            // reviewRepository.PersistReview(userId, movieId, reviewActionValue);
         }
     }
 }

@@ -52,16 +52,18 @@ namespace movierama.server
 
             services.AddSingleton<ReviewCache, ReviewCache>();
 
-            services.AddSingleton<IJobFactory, CustomQuartzJobFactory>();
+            // Add Quartz services
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            
-            services.AddSingleton<PersistReviewsJob>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(PersistReviewsJob), "ProcessReviewsJob Job", "0/10 * * * * ?"));
 
+            // Add our job
             services.AddSingleton<UpdateCountersJob>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(UpdateCountersJob), "UpdateLikeHateCountersJob Job", "0/40 * * * * ?"));
-            
-            services.AddHostedService<CustomQuartzHostedService>();
+            services.AddSingleton(new JobSchedule(jobType: typeof(UpdateCountersJob),cronExpression: "0/10 * * * * ?"));
+
+            services.AddSingleton<PersistReviewActionsJob>();
+            services.AddSingleton(new JobSchedule(jobType: typeof(PersistReviewActionsJob), cronExpression: "0/30 * * * * ?"));
+
+            services.AddHostedService<QuartzHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
