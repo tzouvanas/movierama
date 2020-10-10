@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +42,7 @@ namespace movierama.server.Controllers
             var movies = movieRepository.GetMovies(userId, string.Empty, string.Empty);
 
             var mapper = new MovieModelViewModelMapper();
-            var movieViewModels = mapper.Map(movies, userId);
+            var movieViewModels = movies.Select(item => mapper.Map(item, userId)).ToList();
 
             return View(movieViewModels);
         }

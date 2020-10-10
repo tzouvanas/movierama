@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Movierama.Server.Database
 @using Movierama.Server.Models
-@model List<Movierama.Server.Models.MovieModel>
+@model IEnumerable<Movierama.Server.Models.MovieModel>
 @inject SignInManager<ApplicationIdentityUser> SignInManager
 @{
     ViewData["Title"] = "MovieRama";
@@ -113,7 +113,7 @@
                 <div class="card-body">
                     <h5 class="card-title">@movieViewModel.Title</h5>
 
-                    <p class="card-text">Posted by: @movieViewModel.OwnerFullName @movieViewModel.DaysPublished days ago</p>
+                    <p class="card-text">Posted by: @movieViewModel.OwnerFullName @movieViewModel.PublicationDuration @movieViewModel.UnitOfPulicationDuration ago</p>
 
                     <p class="card-text">@movieViewModel.Description</p>
 
@@ -125,7 +125,7 @@
                         <div>&nbsp</div>
                         <div>&nbsp</div>
 
-                        @if (SignInManager.IsSignedIn(User))
+                        @if (SignInManager.IsSignedIn(User) && @movieViewModel.CanReview)
                         {
                             <div><h7><a @this.HiddenAttribute("Like", @movieViewModel.ReviewOpinion) id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
                             <div><h7><a @this.HiddenAttribute("Unlike", @movieViewModel.ReviewOpinion) id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>

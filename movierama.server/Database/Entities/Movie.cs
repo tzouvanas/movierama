@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Movierama.Server.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace Movierama.Server.Database.Entities
         public string Title { get; set; }
 
         [Required]
+        [DateInThePast]
         [DataType(DataType.Date)]
         public DateTime PublicationDate { get; set; }
 
