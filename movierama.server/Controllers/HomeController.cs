@@ -13,6 +13,7 @@ using movierama.server.Models;
 using Movierama.Server.Database;
 using Movierama.Server.Database.Entities;
 using Movierama.Server.Models;
+using Movierama.Server.Repositories;
 using Movierama.Server.Services;
 
 namespace movierama.server.Controllers
@@ -36,13 +37,20 @@ namespace movierama.server.Controllers
         public IActionResult Index()
         {
             var userId = this.userManager.GetUserId(HttpContext.User);
-
+            
+            // collect movies
             var movieDbContext = this.serviceProvider.GetService<MoviesDbContext>();
             var movieRepository = new MovieRepository(movieDbContext);
             var movies = movieRepository.GetMovies(userId, string.Empty, string.Empty);
 
+            // get owner names of collected movies
+            var userContext = this.serviceProvider.GetService<AuthenticationDbContext>();
+            var userRepository = new UserRepository(userContext);
+            var ownerNames = userRepository.GetFullNames(movies.Select(m => m.OwnerId).ToArray());
+
+            // join data into view model
             var mapper = new MovieModelViewModelMapper();
-            var movieViewModels = movies.Select(item => mapper.Map(item, userId)).ToList();
+            var movieViewModels = movies.Select(item => mapper.Map(item, userId, ownerNames)).ToList();
 
             return View(movieViewModels);
         }

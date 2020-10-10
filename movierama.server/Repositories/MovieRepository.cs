@@ -29,8 +29,8 @@ namespace Movierama.Server.Services
         public List<Movie> GetMovies(string userId, string ownerId, string sortOrder)
         {
             List<Movie> movies = null;
-            bool userIsAuthenticated = !string.IsNullOrEmpty(userId);
             bool ownerIsProvided = !string.IsNullOrEmpty(ownerId);
+            bool userIsAuthenticated = !string.IsNullOrEmpty(userId);
 
             // get movies
             IQueryable<Movie> movieQuery = context.Movies.Include(m => m.Counters);
