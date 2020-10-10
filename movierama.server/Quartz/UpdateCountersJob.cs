@@ -21,10 +21,10 @@ namespace Movierama.Server.Quartz
         }
         public Task Execute(IJobExecutionContext context)
         {
-            var movieRepository = new MovieRepository(this.configuration);
             var reviewRepository = new ReviewRepository(this.configuration);
-
             var pendingReviewCounters = reviewRepository.CountPendingReviews();
+
+            var movieRepository = new MovieRepository(this.configuration);
             movieRepository.UpdateCounters(pendingReviewCounters);
 
             return Task.CompletedTask;

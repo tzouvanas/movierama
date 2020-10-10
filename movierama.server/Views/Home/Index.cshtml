@@ -10,7 +10,7 @@
 @section Scripts {
     <script type="text/javascript">
 
-        function adjustLikeHateVisibility(reviewOpinion, movieId) {
+        function adjustReviewButtonsVisibility(reviewOpinion, movieId) {
 
             document.getElementById("Hate_" + movieId.toString()).hidden = reviewOpinion != 'Neutral';
             document.getElementById("Unhate_" + movieId.toString()).hidden = reviewOpinion != 'Hate';
@@ -49,7 +49,7 @@
                     type: 'GET',
                     data: { movieId: movieId, reviewAction: reviewAction },
                     success: function (data, textStatus, xhr) {
-                        adjustLikeHateVisibility(reviewOpinion, movieId);
+                        adjustReviewButtonsVisibility(reviewOpinion, movieId);
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -91,51 +91,63 @@
     }
 }
 
-<!-- Search Bar -->
-<div class="d-flex alert alert-primary" role="alert">
-    <div>Sort by :</div>
-    <div>&nbsp</div>
-    <div>&nbsp</div>
-    <div id="SortByPublicationDate"><a href="#SortByPublicationDate">Publication Date</a></div>
-    <div>&nbsp</div>
-    <div>&nbsp</div>
-    <div id="SortByLikes"><a href="#SortByLikes">Likes</a></div>
-    <div>&nbsp</div>
-    <div>&nbsp</div>
-    <div id="SortByHates"><a href="#SortByHates">Hates</a></div>
-</div>
-<!-- Search Results -->
-@foreach (var movieViewModel in Model)
-{
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">@movieViewModel.Title</h5>
-
-            <p class="card-text">Posted by: @movieViewModel.OwnerFullName @movieViewModel.DaysPublished days ago</p>
-
-            <p class="card-text">@movieViewModel.Description</p>
-
-            <div class="d-flex">
-                <div><h7 class="flex-grow-1">@movieViewModel.LikeCount Likes</h7></div>
-                <div>&nbsp</div>
-                <div>&nbsp</div>
-                <div><h7 class="flex-grow-1">@movieViewModel.HateCount Hates</h7></div>
-                <div>&nbsp</div>
-                <div>&nbsp</div>
-
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <div><h7><a @this.HiddenAttribute("Like", @movieViewModel.ReviewOpinion) id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
-                    <div><h7><a @this.HiddenAttribute("Unlike", @movieViewModel.ReviewOpinion) id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
-                    <div @this.HiddenAttribute("Like_Description", @movieViewModel.ReviewOpinion) id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
-                    <div>&nbsp</div>
-                    <div>&nbsp</div>
-                    <div><h7><a @this.HiddenAttribute("Hate", @movieViewModel.ReviewOpinion) id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
-                    <div><h7><a @this.HiddenAttribute("Unhate", @movieViewModel.ReviewOpinion) id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
-                    <div @this.HiddenAttribute("Hate_Description", @movieViewModel.ReviewOpinion) id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
-                }
-            </div>
+<div class="row">
+    <div class="col-md-9">
+        <!-- Search Bar -->
+        <div class="d-flex alert alert-primary" role="alert">
+            <div>Sort by :</div>
+            <div>&nbsp</div>
+            <div>&nbsp</div>
+            <div id="SortByPublicationDate"><a href="#SortByPublicationDate">Publication Date</a></div>
+            <div>&nbsp</div>
+            <div>&nbsp</div>
+            <div id="SortByLikes"><a href="#SortByLikes">Likes</a></div>
+            <div>&nbsp</div>
+            <div>&nbsp</div>
+            <div id="SortByHates"><a href="#SortByHates">Hates</a></div>
         </div>
-    </div>
-}
+        <!-- Search Results -->
+        @foreach (var movieViewModel in Model)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@movieViewModel.Title</h5>
 
+                    <p class="card-text">Posted by: @movieViewModel.OwnerFullName @movieViewModel.DaysPublished days ago</p>
+
+                    <p class="card-text">@movieViewModel.Description</p>
+
+                    <div class="d-flex">
+                        <div><h7 class="flex-grow-1">@movieViewModel.LikeCount Likes</h7></div>
+                        <div>&nbsp</div>
+                        <div>&nbsp</div>
+                        <div><h7 class="flex-grow-1">@movieViewModel.HateCount Hates</h7></div>
+                        <div>&nbsp</div>
+                        <div>&nbsp</div>
+
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <div><h7><a @this.HiddenAttribute("Like", @movieViewModel.ReviewOpinion) id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
+                            <div><h7><a @this.HiddenAttribute("Unlike", @movieViewModel.ReviewOpinion) id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
+                            <div @this.HiddenAttribute("Like_Description", @movieViewModel.ReviewOpinion) id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
+                            <div>&nbsp</div>
+                            <div>&nbsp</div>
+                            <div><h7><a @this.HiddenAttribute("Hate", @movieViewModel.ReviewOpinion) id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
+                            <div><h7><a @this.HiddenAttribute("Unhate", @movieViewModel.ReviewOpinion) id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
+                            <div @this.HiddenAttribute("Hate_Description", @movieViewModel.ReviewOpinion) id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+    <div class="col-md-3">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <p>
+                <a class="btn btn-success" asp-action="Create">New Movie</a>
+            </p>
+        }
+    </div>
+</div>

@@ -34,7 +34,6 @@ namespace Movierama.Server.Controllers
             this.serviceProvider = serviceProvider;
         }
 
-        [HttpGet]
         public void Review(int movieId, string reviewAction)
         {
             var opinionValue = Enum.Parse<ReviewAction>(reviewAction);

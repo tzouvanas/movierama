@@ -13,10 +13,16 @@ namespace Movierama.Server.Database.Entities
 
         public string OwnerId { get; set; }
 
+        [Required]
+        [StringLength(50, ErrorMessage = "Name length can't be more than 50.")]
         public string Title { get; set; }
 
+        [Required]
+        [DataType(DataType.Date)]
         public DateTime PublicationDate { get; set; }
 
+        [Required]
+        [StringLength(9000, ErrorMessage = "Name length can't be more than 9000.")]
         public string Description { get; set; }
 
         public CountersOfMovie Counters { get; set; }
