@@ -21,6 +21,7 @@ namespace Movierama.Server.Models
                 Id = movie.Id,
                 Title = movie.Title,
                 Description = movie.Description,
+                OwnerId = movie.OwnerId,
                 OwnerFullName = hasOwner ? ownerNames[movie.OwnerId] : string.Empty,
                 LikeCount = hasCounters ? movie.Counters.Likes : 0,
                 HateCount = hasCounters ? movie.Counters.Hates : 0,

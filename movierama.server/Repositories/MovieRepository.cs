@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using movierama.server.Models;
 using Movierama.Server.Database.Entities;
+using Movierama.Server.Views.Home;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,15 @@ namespace Movierama.Server.Services
             this.context = new MoviesDbContext(builder.Options);
         }
 
-        public List<Movie> GetMovies(string userId, string ownerId, string sortOrder)
+        public List<Movie> GetMovies(string userId, string ownerId, string sortType)
         {
-            List<Movie> movies = null;
             bool ownerIsProvided = !string.IsNullOrEmpty(ownerId);
             bool userIsAuthenticated = !string.IsNullOrEmpty(userId);
+
+            SortType sortTypeValue = SortType.None;
+            Enum.TryParse<SortType>(sortType, out sortTypeValue);
+            
+            List<Movie> movies = null;
 
             // get movies
             IQueryable<Movie> movieQuery = context.Movies.Include(m => m.Counters);
@@ -40,7 +45,7 @@ namespace Movierama.Server.Services
                 movieQuery = movieQuery.Where(m => m.OwnerId == ownerId);
 
             // apply sorting
-            movieQuery = this.ApplySorting(movieQuery, sortOrder);
+            movieQuery = this.ApplySorting(movieQuery, sortTypeValue);
 
             // run query
             movies = movieQuery.ToList();
@@ -82,18 +87,20 @@ namespace Movierama.Server.Services
             return descriptionOfMovie?.Description;
         }
 
-        private IQueryable<Movie> ApplySorting(IQueryable<Movie> movieQuery, string sortOrder)
+        private IQueryable<Movie> ApplySorting(IQueryable<Movie> movieQuery, SortType sortType)
         {
-            switch (sortOrder)
+            switch (sortType)
             {
-                case "likes":
-                    throw new NotSupportedException("likes sorting is not supported yet");
+                case SortType.Likes:
+                    movieQuery = movieQuery.OrderByDescending(m => m.Counters.Likes);
+                    break;
 
-                case "hates":
-                    throw new NotSupportedException("hates sorting is not supported yet");
+                case SortType.Hates:
+                    movieQuery = movieQuery.OrderByDescending(m => m.Counters.Hates);
+                    break;
 
-                case "date":
-                    movieQuery = movieQuery.OrderBy(s => s.PublicationDate);
+                case SortType.PublicationDate:
+                    movieQuery = movieQuery.OrderByDescending(s => s.PublicationDate);
                     break;
 
                 default:

@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Movierama.Server.Database
 @using Movierama.Server.Models
+@using Movierama.Server.Views.Home
 @model IEnumerable<Movierama.Server.Models.MovieModel>
 @inject SignInManager<ApplicationIdentityUser> SignInManager
 @{
@@ -93,32 +94,39 @@
 
 <div class="row">
     <div class="col-md-9">
-        <!-- Search Bar -->
+
+        <!-- Filter Commands Bar -->
         <div class="d-flex alert alert-primary" role="alert">
             <div>Sort by :</div>
             <div>&nbsp</div>
             <div>&nbsp</div>
-            <div id="SortByPublicationDate"><a href="#SortByPublicationDate">Publication Date</a></div>
+            <div id="SortByPublicationDate">
+                @Html.ActionLink("Publication Date", "Index", new { sortType = @SortType.PublicationDate.ToString(), ownerId = ViewBag.OwnerId })
+            </div>
             <div>&nbsp</div>
             <div>|</div>
             <div>&nbsp</div>
-            <div id="SortByLikes"><a href="#SortByLikes">Likes</a></div>
+            <div id="SortByLikes">
+                @Html.ActionLink("Likes", "Index", new { sortType = @SortType.Likes.ToString(), ownerId = ViewBag.OwnerId })
+            </div>
             <div>&nbsp</div>
             <div>|</div>
             <div>&nbsp</div>
-            <div id="SortByHates"><a href="#SortByHates">Hates</a></div>
+            <div id="SortByHates">
+                @Html.ActionLink("Hates", "Index", new { sortType = @SortType.Hates.ToString(), ownerId = ViewBag.OwnerId })
+            </div>
             <div>&nbsp</div>
             <div>|</div>
             <div>&nbsp</div>
         </div>
-        <!-- Search Results -->
+        <!-- Movies-->
         @foreach (var movieViewModel in Model)
         {
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">@movieViewModel.Title</h5>
 
-                    <p class="card-text">Posted by: <a href="SearchWithOwnerId">@movieViewModel.OwnerFullName</a> @movieViewModel.PublicationDuration @movieViewModel.UnitOfPulicationDuration ago</p>
+                    <p class="card-text">Posted by: @Html.ActionLink(movieViewModel.OwnerFullName, "Index", new { sortType = ViewBag.SortType, ownerId = movieViewModel.OwnerId }) @movieViewModel.PublicationDuration @movieViewModel.UnitOfPulicationDuration ago</p>
 
                     <p class="card-text">@movieViewModel.Description</p>
 

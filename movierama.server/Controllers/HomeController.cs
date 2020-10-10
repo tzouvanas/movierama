@@ -34,14 +34,17 @@ namespace movierama.server.Controllers
             this.userManager = userManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string sortType, string ownerId)
         {
+            ViewBag.OwnerId = ownerId;
+            ViewBag.SortType = sortType;
+
             var userId = this.userManager.GetUserId(HttpContext.User);
             
             // collect movies
             var movieDbContext = this.serviceProvider.GetService<MoviesDbContext>();
             var movieRepository = new MovieRepository(movieDbContext);
-            var movies = movieRepository.GetMovies(userId, string.Empty, string.Empty);
+            var movies = movieRepository.GetMovies(userId, ownerId, sortType);
 
             // get owner names of collected movies
             var userContext = this.serviceProvider.GetService<AuthenticationDbContext>();

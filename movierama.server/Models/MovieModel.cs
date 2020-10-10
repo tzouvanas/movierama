@@ -13,7 +13,9 @@ namespace Movierama.Server.Models
         public string Title { get; set; }
         
         public string Description { get; set; }
-        
+
+        public string OwnerId { get; set; }
+
         public string OwnerFullName { get; set; }
 
         public int PublicationDuration { get; set; }
