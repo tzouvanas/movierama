@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using movierama.server.Models;
 using Movierama.Server.Database.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Movierama.Server.Services
 {
@@ -18,35 +19,67 @@ namespace Movierama.Server.Services
             this.context = context;
         }
 
-        public List<Movie> GetMovies(string sortOrder)
+        public MovieRepository(IConfiguration configuration)
         {
+            DbContextOptionsBuilder<MoviesDbContext> builder = new DbContextOptionsBuilder<MoviesDbContext>();
+            builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            this.context = new MoviesDbContext(builder.Options);
+        }
 
+        public List<Movie> GetMovies(string userId, string ownerId, string sortOrder)
+        {
             List<Movie> movies = null;
-            IQueryable<Movie> movieQuery = context.Movies;
+            bool userIsAuthenticated = !string.IsNullOrEmpty(userId);
+            bool ownerIsProvided = !string.IsNullOrEmpty(ownerId);
+
+            // get movies
+            IQueryable<Movie> movieQuery = context.Movies.Include(m => m.Counters);
+
+            // apply search criterion when we are searching for movies of specific owner
+            if (ownerIsProvided)
+                movieQuery = movieQuery.Where(m => m.OwnerId == ownerId);
+
+            // apply sorting
             movieQuery = this.ApplySorting(movieQuery, sortOrder);
+
+            // run query
             movies = movieQuery.ToList();
+
+            // if user is authenticated get reviews of user for loaded movies
+            if (userIsAuthenticated)
+            {
+                var movieIds = movies.Select(m => m.Id).ToArray();
+                var reviewQuery = context.Reviews.Where(r => r.UserId == userId && movieIds.Contains(r.MovieId));
+                var reviews = reviewQuery.ToList();
+            }
 
             return movies;
         }
 
-        public List<Movie> GetMoviesOfUser(string sortOrder, int userId)
+        public void UpdateCounters(Dictionary<int, (int, int, int)> counters)
         {
-            List<Movie> movies = null;
-            IQueryable<Movie> movieQuery = context.Movies;
-            movieQuery = this.ApplySorting(movieQuery, sortOrder);
-            movies = movieQuery.ToList();
+            var movieIds = counters.Keys.ToArray();
+            var counterEntities = this.context.CountersOfMovies.Where(item => movieIds.Contains(item.MovieId));
 
-            return movies;
+            foreach (var counterEntity in counterEntities) 
+            {
+                counterEntity.Likes += counters[counterEntity.MovieId].Item1;
+                counterEntity.Hates += counters[counterEntity.MovieId].Item2;
+                counterEntity.LastConsideredReviewId = counters[counterEntity.MovieId].Item3;
+            }
+
+            this.context.SaveChanges();
         }
 
-        public List<Movie> GetMoviesOfUser(string userId, string sortOrder)
+        public string GetFullDescription(int movieId)
         {
-            List<Movie> movies = null;
-            IQueryable<Movie> movieQuery = context.Movies.Where(m => m.OwnerId == userId);
-            movieQuery = this.ApplySorting(movieQuery, sortOrder);
-            movies = movieQuery.ToList();
+            DescriptionOfMovie descriptionOfMovie = null;
 
-            return movies;
+            descriptionOfMovie = context.DescriptionOfMovies
+                .Where(item => item.MovieId == movieId)
+                .SingleOrDefault();
+
+            return descriptionOfMovie?.Description;
         }
 
         private IQueryable<Movie> ApplySorting(IQueryable<Movie> movieQuery, string sortOrder)
@@ -69,17 +102,6 @@ namespace Movierama.Server.Services
             }
 
             return movieQuery;
-        }
-
-        public string LoadFullDescription(int movieId)
-        {
-            DescriptionOfMovie descriptionOfMovie = null;
-
-            descriptionOfMovie = context.DescriptionOfMovies
-                .Where(item => item.MovieId == movieId)
-                .SingleOrDefault();
-
-            return descriptionOfMovie?.Description;
         }
     }
 }

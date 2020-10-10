@@ -35,11 +35,11 @@ namespace movierama.server.Controllers
 
         public IActionResult Index()
         {
-            var userId= this.userManager.GetUserId(HttpContext.User);
+            var userId = this.userManager.GetUserId(HttpContext.User);
 
-            var context = this.serviceProvider.GetService<MoviesDbContext>();
-            var movieService = new MovieRepository(context);
-            var movies = movieService.GetMovies("");
+            var movieDbContext = this.serviceProvider.GetService<MoviesDbContext>();
+            var movieRepository = new MovieRepository(movieDbContext);
+            var movies = movieRepository.GetMovies(userId, string.Empty, string.Empty);
 
             var mapper = new MovieModelViewModelMapper();
             var movieViewModels = mapper.Map(movies, userId);

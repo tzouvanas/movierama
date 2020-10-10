@@ -7,18 +7,17 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Movierama.Server.Repositories;
 using Movierama.Server.Models;
-using movierama.server.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace Movierama.Server.Quartz
 {
     [DisallowConcurrentExecution]
-    public class ProcessReviewsJob : IJob
+    public class PersistReviewsJob : IJob
     {
         private readonly IServiceProvider serviceProvider;
         private readonly IConfiguration configuration;
-        private readonly ILogger<ProcessReviewsJob> _logger;
-        public ProcessReviewsJob(ILogger<ProcessReviewsJob> logger, 
+        private readonly ILogger<PersistReviewsJob> _logger;
+        public PersistReviewsJob(ILogger<PersistReviewsJob> logger, 
             IServiceProvider serviceProvider, 
             IConfiguration configuration)
         {
@@ -30,11 +29,12 @@ namespace Movierama.Server.Quartz
         {
             var reviewRepository = new ReviewRepository(this.configuration);
             var reviewCache = this.serviceProvider.GetService<ReviewCache>();
-            
+
+            // TODO : consider batch update instead of review by review update
             foreach (string userId in reviewCache.Data.Keys) {
                 foreach (int movieId in reviewCache.Data[userId].Keys) {
                     var opinion = reviewCache.Data[userId][movieId];
-                    reviewRepository.RegisterReview(userId, movieId, (ReviewOpinion)opinion);
+                    reviewRepository.PersistReview(userId, movieId, (ReviewAction)opinion);
                 }
             }
 

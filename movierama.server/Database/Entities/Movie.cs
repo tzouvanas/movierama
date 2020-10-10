@@ -17,6 +17,12 @@ namespace Movierama.Server.Database.Entities
 
         public DateTime PublicationDate { get; set; }
 
-        public string Description { get; internal set; }
+        public string Description { get; set; }
+
+        public CountersOfMovie Counters { get; set; }
+
+        public DescriptionOfMovie FullDescription { get; set; }
+
+        public IList<Review> Reviews { get; set; }
     }
 }

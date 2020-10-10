@@ -1,4 +1,5 @@
 ﻿using Movierama.Server.Database.Entities;
+using Movierama.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +17,9 @@ namespace Movierama.Server.Database.Entities
         [Key]
         public int MovieId { get; set; }
 
+        [ForeignKey("MovieId")]
+        public Movie Movie { get; set; }
 
-        public int Opinion { get; set; }
+        public ReviewOpinion Opinion { get; set; }
     }
 }

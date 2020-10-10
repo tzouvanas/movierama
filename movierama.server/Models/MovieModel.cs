@@ -22,7 +22,7 @@ namespace Movierama.Server.Models
 
         public int HateCount { get; set; }
 
-        public bool CanVote { get; set; }
+        public bool CanReview { get; set; }
 
         public ReviewOpinion ReviewOpinion { get; set; }
 

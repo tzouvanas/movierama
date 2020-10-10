@@ -1,8 +1,16 @@
 ﻿namespace Movierama.Server.Models {
+    public enum ReviewAction
+    {
+        Like,
+        Unlike,
+        Hate,
+        Unhate
+    }
+
     public enum ReviewOpinion
     {
-        Hate = -1,
-        Neutral = 0,
-        Like = 1
+        Neutral,
+        Like,
+        Hate
     }
 }

@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Movierama.Server.Database
+@using Movierama.Server.Models
 @model List<Movierama.Server.Models.MovieModel>
 @inject SignInManager<ApplicationIdentityUser> SignInManager
 @{
@@ -9,15 +10,15 @@
 @section Scripts {
     <script type="text/javascript">
 
-        function adjustLikeHateVisibility(userOpinion, movieId) {
+        function adjustLikeHateVisibility(reviewOpinion, movieId) {
 
-            document.getElementById("Hate_" + movieId.toString()).hidden = userOpinion != 'Neutral';
-            document.getElementById("Unhate_" + movieId.toString()).hidden = userOpinion != 'Hate';
-            document.getElementById("Hate_Description_" + movieId.toString()).hidden = userOpinion != 'Hate';
+            document.getElementById("Hate_" + movieId.toString()).hidden = reviewOpinion != 'Neutral';
+            document.getElementById("Unhate_" + movieId.toString()).hidden = reviewOpinion != 'Hate';
+            document.getElementById("Hate_Description_" + movieId.toString()).hidden = reviewOpinion != 'Hate';
 
-            document.getElementById("Like_" + movieId.toString()).hidden = userOpinion != 'Neutral';
-            document.getElementById("Unlike_" + movieId.toString()).hidden = userOpinion != 'Like';
-            document.getElementById("Like_Description_" + movieId.toString()).hidden = userOpinion != 'Like';
+            document.getElementById("Like_" + movieId.toString()).hidden = reviewOpinion != 'Neutral';
+            document.getElementById("Unlike_" + movieId.toString()).hidden = reviewOpinion != 'Like';
+            document.getElementById("Like_Description_" + movieId.toString()).hidden = reviewOpinion != 'Like';
         }
 
         $(document).ready(function () {
@@ -34,9 +35,11 @@
 
                 event.preventDefault();
                 movieId = event.target.id.toString().split('_')[1];
-                userOpinion = event.target.id.toString().split('_')[0];
-                if (userOpinion != "Like" && userOpinion != "Hate")
-                    userOpinion = "Neutral"
+                reviewAction = event.target.id.toString().split('_')[0];
+
+                reviewOpinion = 'Neutral'
+                if (reviewAction == 'Like') reviewOpinion = 'Like'
+                if (reviewAction == 'Hate') reviewOpinion = 'Hate'
 
                 $.ajax({
                     url: '/api/review',
@@ -44,9 +47,9 @@
                         'Content-Type': 'application/json'
                     },
                     type: 'GET',
-                    data: { movieId: movieId, opinion: userOpinion },
+                    data: { movieId: movieId, reviewAction: reviewAction },
                     success: function (data, textStatus, xhr) {
-                        adjustLikeHateVisibility(userOpinion, movieId);
+                        adjustLikeHateVisibility(reviewOpinion, movieId);
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         console.log(errorThrown);
@@ -59,7 +62,7 @@
 }
 
 @functions{
-    public string HiddenAttribute(string element, string userOpinion)
+    public string HiddenAttribute(string element, ReviewOpinion opinion)
     {
         bool shouldBeHidden = false;
 
@@ -67,17 +70,17 @@
         {
             case "Hate":
             case "Like":
-                shouldBeHidden = userOpinion != "Neutral";
+                shouldBeHidden = opinion != ReviewOpinion.Neutral;
                 break;
 
             case "Unhate":
             case "Hate_Description":
-                shouldBeHidden = userOpinion != "Hate";
+                shouldBeHidden = opinion != ReviewOpinion.Hate;
                 break;
 
             case "Unlike":
             case "Like_Description":
-                shouldBeHidden = userOpinion != "Like";
+                shouldBeHidden = opinion != ReviewOpinion.Like;
                 break;
         }
 
@@ -122,14 +125,14 @@
 
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <div><h7><a @this.HiddenAttribute("Like", @movieViewModel.ReviewOpinion.ToString()) id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
-                    <div><h7><a @this.HiddenAttribute("Unlike", @movieViewModel.ReviewOpinion.ToString()) id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
-                    <div @this.HiddenAttribute("Like_Description", @movieViewModel.ReviewOpinion.ToString()) id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
+                    <div><h7><a @this.HiddenAttribute("Like", @movieViewModel.ReviewOpinion) id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
+                    <div><h7><a @this.HiddenAttribute("Unlike", @movieViewModel.ReviewOpinion) id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
+                    <div @this.HiddenAttribute("Like_Description", @movieViewModel.ReviewOpinion) id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
                     <div>&nbsp</div>
                     <div>&nbsp</div>
-                    <div><h7><a @this.HiddenAttribute("Hate", @movieViewModel.ReviewOpinion.ToString()) id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
-                    <div><h7><a @this.HiddenAttribute("Unhate", @movieViewModel.ReviewOpinion.ToString()) id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
-                    <div @this.HiddenAttribute("Hate_Description", @movieViewModel.ReviewOpinion.ToString()) id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
+                    <div><h7><a @this.HiddenAttribute("Hate", @movieViewModel.ReviewOpinion) id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
+                    <div><h7><a @this.HiddenAttribute("Unhate", @movieViewModel.ReviewOpinion) id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
+                    <div @this.HiddenAttribute("Hate_Description", @movieViewModel.ReviewOpinion) id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
                 }
             </div>
         </div>

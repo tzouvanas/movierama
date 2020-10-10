@@ -35,9 +35,9 @@ namespace Movierama.Server.Controllers
         }
 
         [HttpGet]
-        public void Review(int movieId, string opinion)
+        public void Review(int movieId, string reviewAction)
         {
-            var opinionValue = Enum.Parse<ReviewOpinion>(opinion);
+            var opinionValue = Enum.Parse<ReviewAction>(reviewAction);
             var userId = this.userManager.GetUserId(HttpContext.User);
 
             // record in memory
@@ -45,7 +45,7 @@ namespace Movierama.Server.Controllers
             reviewCache.RecordReview(userId, movieId, (int) opinionValue);
 
             var reviewRepository = new ReviewRepository(this.serviceProvider);
-            reviewRepository.RegisterReview(userId, movieId, opinionValue);
+            reviewRepository.PersistReview(userId, movieId, opinionValue);
         }
     }
 }

@@ -19,6 +19,7 @@ using Quartz.Spi;
 using Quartz;
 using Movierama.Server.Quartz;
 using Quartz.Impl;
+using Movierama.Server.Services;
 
 namespace movierama.server
 {
@@ -38,10 +39,10 @@ namespace movierama.server
 
             services.AddDbContext<AuthenticationDbContext>(options =>options.UseSqlServer(defaultConnectionString));
 
-            services.AddDbContext<MoviesDbContext>(options => options.UseSqlServer(defaultConnectionString));
-
             services.AddDefaultIdentity<ApplicationIdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<AuthenticationDbContext>();
+
+            services.AddDbContext<MoviesDbContext>(options => options.UseSqlServer(defaultConnectionString));
 
             services.AddControllersWithViews().AddNewtonsoftJson();
 
@@ -54,15 +55,13 @@ namespace movierama.server
             services.AddSingleton<IJobFactory, CustomQuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             
-            services.AddSingleton<ProcessReviewsJob>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(ProcessReviewsJob), "ProcessReviewsJob Job", "0/10 * * * * ?"));
+            services.AddSingleton<PersistReviewsJob>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(PersistReviewsJob), "ProcessReviewsJob Job", "0/10 * * * * ?"));
 
-            //services.AddSingleton<UpdateLikeHateCountersJob>();
-            //services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(UpdateLikeHateCountersJob), "UpdateLikeHateCountersJob Job", "0/50 * * * * ?"));
+            services.AddSingleton<UpdateCountersJob>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(UpdateCountersJob), "UpdateLikeHateCountersJob Job", "0/40 * * * * ?"));
             
             services.AddHostedService<CustomQuartzHostedService>();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

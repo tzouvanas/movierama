@@ -7,14 +7,20 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server.Database.Entities
 {
-    public class DescriptionOfMovie
+    public class ReviewHistory
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public string UserId { get; set; }
+
         public int MovieId { get; set; }
 
-        [ForeignKey("MovieId")]
-        public Movie Movie { get; set; }
+        public DateTime CreationTime { get; set; }
 
-        public string Description { get; set; }
+        public int Like { get; set; }
+
+        public int Hate { get; set; }
     }
 }

@@ -28,5 +28,7 @@ namespace movierama.server.Models
         public DbSet<Movie> Movies { get; set; }
 
         public DbSet<Review> Reviews { get; set; }
+
+        public DbSet<ReviewHistory> ReviewsHistory { get; set; }
     }
 }

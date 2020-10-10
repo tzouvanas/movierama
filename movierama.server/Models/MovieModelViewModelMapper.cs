@@ -11,6 +11,8 @@ namespace Movierama.Server.Models
     {
         public MovieModel Map(Movie movie, string userId) 
         {
+            bool hasReview = movie.Reviews != null && movie.Reviews.Count > 0;
+
             var viewModel = new MovieModel
             {
                 Id = movie.Id,
@@ -19,7 +21,8 @@ namespace Movierama.Server.Models
                 LikeCount = 23,
                 HateCount = 45,
                 DaysPublished = (int)(DateTime.Today - movie.PublicationDate).TotalDays,
-                CanVote = movie.OwnerId != userId
+                CanReview = movie.OwnerId != userId,
+                ReviewOpinion = hasReview ? movie.Reviews[0].Opinion : ReviewOpinion.Neutral
             };
 
             return viewModel;
