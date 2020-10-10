@@ -43,12 +43,9 @@ namespace Movierama.Server.Controllers
             // record in memory
             var reviewCache = this.serviceProvider.GetService<ReviewCache>();
             reviewCache.RecordReview(userId, movieId, (int) opinionValue);
-        }
 
-        public void Process() 
-        {
             var reviewRepository = new ReviewRepository(this.serviceProvider);
-            //reviewRepository.RegisterReview(movieId, userId.Value, opinionValue);
+            reviewRepository.RegisterReview(userId, movieId, opinionValue);
         }
     }
 }

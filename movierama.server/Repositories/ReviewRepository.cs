@@ -6,6 +6,8 @@ using System.Linq;
 using Movierama.Server.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
 
 namespace Movierama.Server.Repositories
 {
@@ -20,11 +22,18 @@ namespace Movierama.Server.Repositories
             this.context = this.serviceProvider.GetService<MoviesDbContext>();
         }
 
-        public async Task RegisterReview(string userId, int movieId, ReviewOpinion opinion)
+        public ReviewRepository(IConfiguration configuration)
         {
-            var existingReview = await this.context.Reviews
+            DbContextOptionsBuilder<MoviesDbContext> builder = new DbContextOptionsBuilder<MoviesDbContext>();
+            builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            this.context = new MoviesDbContext(builder.Options);
+        }
+
+        public void RegisterReview(string userId, int movieId, ReviewOpinion opinion)
+        {
+            var existingReview = this.context.Reviews
                 .Where(r => r.UserId == userId && r.MovieId == movieId)
-                .SingleOrDefaultAsync();
+                .SingleOrDefault();
 
             if (existingReview != null)
             {
@@ -36,7 +45,7 @@ namespace Movierama.Server.Repositories
                 context.Reviews.Add(review);
             }
 
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
     }
 }

@@ -7,24 +7,29 @@ namespace Movierama.Server.Cache
 {
     public class ReviewCache
     {
-        private Dictionary<string, Dictionary<int, int>> cache;
-
-        public ReviewCache() {
-            this.cache = new Dictionary<string, Dictionary<int, int>>();
+        public Dictionary<string, Dictionary<int, int>> Data
+        {
+            get;
+            private set;
         }
-        public void RecordReview(string userId, int movieId, int opinion) 
+
+        public ReviewCache()
+        {
+            this.Data = new Dictionary<string, Dictionary<int, int>>();
+        }
+        public void RecordReview(string userId, int movieId, int opinion)
         {
             lock (this)
             {
                 // check if user is registered
-                if (!this.cache.ContainsKey(userId))
-                    this.cache.Add(userId, new Dictionary<int, int>());
+                if (!this.Data.ContainsKey(userId))
+                    this.Data.Add(userId, new Dictionary<int, int>());
 
                 // check if movie is registered
-                if (!this.cache[userId].ContainsKey(movieId))
-                    this.cache[userId].Add(movieId, opinion);
+                if (!this.Data[userId].ContainsKey(movieId))
+                    this.Data[userId].Add(movieId, opinion);
 
-                this.cache[userId][movieId] = opinion;
+                this.Data[userId][movieId] = opinion;
             }
         }
     }

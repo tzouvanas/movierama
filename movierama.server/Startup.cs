@@ -15,6 +15,10 @@ using Microsoft.Extensions.Hosting;
 using movierama.server.Models;
 using Movierama.Server.Database;
 using Movierama.Server.Cache;
+using Quartz.Spi;
+using Quartz;
+using Movierama.Server.Quartz;
+using Quartz.Impl;
 
 namespace movierama.server
 {
@@ -40,11 +44,25 @@ namespace movierama.server
                 .AddEntityFrameworkStores<AuthenticationDbContext>();
 
             services.AddControllersWithViews().AddNewtonsoftJson();
+
             services.AddRazorPages();
 
             services.AddHttpContextAccessor();
 
             services.AddSingleton<ReviewCache, ReviewCache>();
+
+            services.AddSingleton<IJobFactory, CustomQuartzJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            
+            services.AddSingleton<ProcessReviewsJob>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(ProcessReviewsJob), "ProcessReviewsJob Job", "0/10 * * * * ?"));
+
+            //services.AddSingleton<UpdateLikeHateCountersJob>();
+            //services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(UpdateLikeHateCountersJob), "UpdateLikeHateCountersJob Job", "0/50 * * * * ?"));
+            
+            services.AddHostedService<CustomQuartzHostedService>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
