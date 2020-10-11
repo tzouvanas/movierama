@@ -121,8 +121,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">@movieViewModel.Title</h5>
-
-                    <h8><p class="card-text">Publication Date:&nbsp&nbsp @movieViewModel.PublicationDate</p></h8>
+                    <h6 class="card-subtitle mb-2 text-muted">Publication Date:&nbsp&nbsp @movieViewModel.PublicationDate</h6>
 
                     <p class="card-text">Posted by: @Html.ActionLink(movieViewModel.OwnerFullName, "Index", new { sortType = ViewBag.SortType, ownerId = movieViewModel.OwnerId }) @movieViewModel.PostDuration @movieViewModel.UnitOfPostDuration ago</p>
 
