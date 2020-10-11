@@ -15,10 +15,12 @@
             document.getElementById("Hate_" + movieId.toString()).hidden = reviewOpinion != 'Neutral';
             document.getElementById("Unhate_" + movieId.toString()).hidden = reviewOpinion != 'Hate';
             document.getElementById("Hate_Description_" + movieId.toString()).hidden = reviewOpinion != 'Hate';
+            document.getElementById("HateCounter_" + movieId.toString()).hidden = !document.getElementById("Hate_" + movieId.toString()).hidden
 
             document.getElementById("Like_" + movieId.toString()).hidden = reviewOpinion != 'Neutral';
             document.getElementById("Unlike_" + movieId.toString()).hidden = reviewOpinion != 'Like';
             document.getElementById("Like_Description_" + movieId.toString()).hidden = reviewOpinion != 'Like';
+            document.getElementById("LikeCounter_" + movieId.toString()).hidden = !document.getElementById("Like_" + movieId.toString()).hidden
         }
 
         function uploadReviewAction(movieId, reviewAction) {
@@ -128,10 +130,10 @@
                     <p class="card-text">@movieViewModel.Description</p>
 
                     <div class="d-flex flex-row">
-                        <div><h7>@movieViewModel.LikeCount Likes</h7></div>
+                        <div @ReviewCountersHiddenAttributeExtension.HiddenAttributeFor(movieViewModel.ReviewOpinion, SignInManager.IsSignedIn(User), @movieViewModel.CanReview) id="LikeCounter_@movieViewModel.Id"><h7>@movieViewModel.LikeCount Likes</h7></div>
                         <div>&nbsp</div>
                         <div>&nbsp</div>
-                        <div><h7>@movieViewModel.HateCount Hates</h7></div>
+                        <div @ReviewCountersHiddenAttributeExtension.HiddenAttributeFor(movieViewModel.ReviewOpinion, SignInManager.IsSignedIn(User), @movieViewModel.CanReview) id="HateCounter_@movieViewModel.Id"><h7>@movieViewModel.HateCount Hates</h7></div>
                         <div>&nbsp</div>
                         <div>&nbsp</div>
 
@@ -151,7 +153,7 @@
                                     <h7>
                                         <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Like", @movieViewModel.ReviewOpinion)
                                            class="review-movie"
-                                           id="Like_@movieViewModel.Id" href="#Like">Like</a>
+                                           id="Like_@movieViewModel.Id" href="#Like">@movieViewModel.LikeCount Likes</a>
                                     </h7>
                                 </div>
 
@@ -173,7 +175,7 @@
                                     <h7>
                                         <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Hate", @movieViewModel.ReviewOpinion)
                                            class="review-movie"
-                                           id="Hate_@movieViewModel.Id" href="#Hate">Hate</a>
+                                           id="Hate_@movieViewModel.Id" href="#Hate">@movieViewModel.HateCount Hates</a>
                                     </h7>
                                 </div>
 

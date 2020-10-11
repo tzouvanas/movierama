@@ -60,8 +60,8 @@ namespace movierama.server
             services.AddSingleton<UpdateCountersJob>();
             services.AddSingleton(new JobSchedule(jobType: typeof(UpdateCountersJob),cronExpression: "0/10 * * * * ?"));
 
-            services.AddSingleton<PersistReviewActionsJob>();
-            services.AddSingleton(new JobSchedule(jobType: typeof(PersistReviewActionsJob), cronExpression: "0/30 * * * * ?"));
+            //services.AddSingleton<PersistReviewActionsJob>();
+            //services.AddSingleton(new JobSchedule(jobType: typeof(PersistReviewActionsJob), cronExpression: "0/30 * * * * ?"));
 
             services.AddHostedService<QuartzHostedService>();
         }
