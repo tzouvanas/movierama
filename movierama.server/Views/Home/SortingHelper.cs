@@ -13,7 +13,6 @@ namespace Movierama.Server.Views.Home
 
     public enum SortOrder
     {
-        None,
         Asc,
         Desc
     }
@@ -45,7 +44,7 @@ namespace Movierama.Server.Views.Home
         public static SortOrder ResolveSortOrder(string sortOrder)
         {
             if (string.IsNullOrEmpty(sortOrder))
-                return SortOrder.None;
+                return SortOrder.Asc;
 
             var sortOrderValue = Enum.Parse<SortOrder>(sortOrder);
 
