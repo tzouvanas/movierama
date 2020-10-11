@@ -36,10 +36,8 @@ namespace Movierama.Server.Services
 
             SortType sortTypeValue = SortType.None;
             Enum.TryParse<SortType>(sortType, out sortTypeValue);
-            
-            List<Movie> movies = null;
 
-            // get movies
+            // start building movies query
             IQueryable<Movie> movieQuery = context.Movies.Include(m => m.Counters);
 
             // apply search criterion when we are searching for movies of specific owner
@@ -50,7 +48,7 @@ namespace Movierama.Server.Services
             movieQuery = this.ApplySorting(movieQuery, sortTypeValue);
 
             // run query
-            movies = await movieQuery.ToListAsync();
+            var movies = await movieQuery.ToListAsync();
 
             // if user is authenticated get reviews of user for loaded movies
             if (userIsAuthenticated)
@@ -63,9 +61,11 @@ namespace Movierama.Server.Services
             return movies;
         }
 
-        public async Task RegisterNewMovieAsync(Movie movie, string userId) 
+        public async Task RegisterNewMovieAsync(Movie movie, string userId)
         {
             movie.OwnerId = userId;
+
+            // initiate movie counters
             movie.Counters = new CountersOfMovie()
             {
                 Hates = 0,
@@ -73,6 +73,7 @@ namespace Movierama.Server.Services
                 LastConsideredReviewId = 0
             };
 
+            // handle huge decription scenario.
             if (movie.Description.Length > 300)
             {
                 var fullDescription = movie.Description;
@@ -80,6 +81,7 @@ namespace Movierama.Server.Services
                 movie.FullDescription = new DescriptionOfMovie() { Description = fullDescription };
             }
 
+            // persist to db
             this.context.Movies.Add(movie);
             await this.context.SaveChangesAsync();
         }
@@ -89,7 +91,7 @@ namespace Movierama.Server.Services
             var movieIds = counters.Keys.ToArray();
             var counterEntities = this.context.CountersOfMovies.Where(item => movieIds.Contains(item.MovieId));
 
-            foreach (var counterEntity in counterEntities) 
+            foreach (var counterEntity in counterEntities)
             {
                 counterEntity.Likes += counters[counterEntity.MovieId].Item1;
                 counterEntity.Hates += counters[counterEntity.MovieId].Item2;
@@ -101,7 +103,6 @@ namespace Movierama.Server.Services
 
         public async Task<string> GetFullDescriptionAsync(int movieId)
         {
-            // TODO : move out of repository as expression on repository's context.
             var descriptionEntity = await this.context.DescriptionOfMovies
                 .Where(item => item.MovieId == movieId)
                 .SingleOrDefaultAsync();
@@ -126,6 +127,7 @@ namespace Movierama.Server.Services
                     movieQuery = movieQuery.OrderByDescending(s => s.PublicationDate);
                     break;
 
+                // latest introduced movies
                 default:
                     movieQuery = movieQuery.OrderByDescending(s => s.Id);
                     break;
