@@ -92,8 +92,8 @@
 <div class="row">
     <div class="col-md-9">
 
-        <!-- Filter Commands Bar -->
-        <div class="d-flex alert alert-primary" role="alert">
+        <!-- Sort By Bar -->
+        <div class="d-flex flex-row alert alert-primary" role="alert">
             <div>Sort by :</div>
             <div>&nbsp</div>
             <div>&nbsp</div>
@@ -127,11 +127,11 @@
 
                     <p class="card-text">@movieViewModel.Description</p>
 
-                    <div class="d-flex">
-                        <div><h7 class="flex-grow-1">@movieViewModel.LikeCount Likes</h7></div>
+                    <div class="d-flex flex-row">
+                        <div><h7>@movieViewModel.LikeCount Likes</h7></div>
                         <div>&nbsp</div>
                         <div>&nbsp</div>
-                        <div><h7 class="flex-grow-1">@movieViewModel.HateCount Hates</h7></div>
+                        <div><h7>@movieViewModel.HateCount Hates</h7></div>
                         <div>&nbsp</div>
                         <div>&nbsp</div>
 
@@ -146,42 +146,48 @@
 
                         @if (SignInManager.IsSignedIn(User) && @movieViewModel.CanReview)
                         {
-                            <div>
-                                <h7>
-                                    <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Like", @movieViewModel.ReviewOpinion)
-                                       id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a>
-                                </h7>
+                            <div class="d-flex flex-row ml-auto">
+                                <div>
+                                    <h7>
+                                        <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Like", @movieViewModel.ReviewOpinion)
+                                           class="review-movie"
+                                           id="Like_@movieViewModel.Id" href="#Like">Like</a>
+                                    </h7>
+                                </div>
+
+                                <div>
+                                    <h7>
+                                        <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Unlike", @movieViewModel.ReviewOpinion)
+                                           class="review-movie"
+                                           id="Unlike_@movieViewModel.Id" href="#Like">Unlike</a>
+                                    </h7>
+                                </div>
+
+                                <div @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Like_Description", @movieViewModel.ReviewOpinion)
+                                     id="Like_Description_@movieViewModel.Id"><p>&nbsp|&nbspYou like this movie ...</p></div>
+
+                                <div>&nbsp</div>
+                                <div>&nbsp</div>
+
+                                <div>
+                                    <h7>
+                                        <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Hate", @movieViewModel.ReviewOpinion)
+                                           class="review-movie"
+                                           id="Hate_@movieViewModel.Id" href="#Hate">Hate</a>
+                                    </h7>
+                                </div>
+
+                                <div>
+                                    <h7>
+                                        <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Unhate", @movieViewModel.ReviewOpinion)
+                                           class="review-movie"
+                                           id="Unhate_@movieViewModel.Id" href="#Hate">Unhate</a>
+                                    </h7>
+                                </div>
+
+                                <div @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Hate_Description", @movieViewModel.ReviewOpinion)
+                                     id="Hate_Description_@movieViewModel.Id"><p>&nbsp|&nbspYou hate this movie ...</p></div>
                             </div>
-
-                            <div>
-                                <h7>
-                                    <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Unlike", @movieViewModel.ReviewOpinion)
-                                       id="Unlike_@movieViewModel.Id" class="review-movie mr-auto" href="#Like">Unlike</a>
-                                </h7>
-                            </div>
-
-                            <div @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Like_Description", @movieViewModel.ReviewOpinion)
-                                 id="Like_Description_@movieViewModel.Id" class="mr-auto"><p>&nbsp|&nbspYou like this movie ...</p></div>
-
-                            <div>&nbsp</div>
-                            <div>&nbsp</div>
-
-                            <div>
-                                <h7>
-                                    <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Hate", @movieViewModel.ReviewOpinion)
-                                       id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a>
-                                </h7>
-                            </div>
-
-                            <div>
-                                <h7>
-                                    <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Unhate", @movieViewModel.ReviewOpinion)
-                                       id="Unhate_@movieViewModel.Id" class="review-movie mr-auto" href="#Hate">Unhate</a>
-                                </h7>
-                            </div>
-
-                            <div @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Hate_Description", @movieViewModel.ReviewOpinion)
-                                 id="Hate_Description_@movieViewModel.Id" class="mr-auto"><p>&nbsp|&nbspYou hate this movie ...</p></div>
                         }
                     </div>
                 </div>
