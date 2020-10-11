@@ -22,8 +22,7 @@
             document.getElementById("Like_Description_" + movieId.toString()).hidden = reviewOpinion != 'Like';
         }
 
-        function uploadReviewAction(movieId, reviewAction)
-        {
+        function uploadReviewAction(movieId, reviewAction){
             reviewOpinion = 'Neutral'
             if (reviewAction == 'Like') reviewOpinion = 'Like'
             if (reviewAction == 'Hate') reviewOpinion = 'Hate'
@@ -44,8 +43,7 @@
             });
         }
 
-        function getFullDescription(movieId) {
-
+        function showFullDescription(movieId) {
             $.ajax({
                 url: '/api/movie',
                 headers: {
@@ -85,7 +83,7 @@
             $('.full-description').click(function (event) {
                 event.preventDefault();
                 movieId = event.target.id.toString().split('_')[1];
-                getFullDescription(movieId);
+                showFullDescription(movieId);
                 return false;
             });
         });
@@ -181,13 +179,15 @@
                         {
                             <div>
                                 <h7>
-                                    <a @this.HiddenAttributeFor("Like", @movieViewModel.ReviewOpinion) id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a>
+                                    <a @this.HiddenAttributeFor("Like", @movieViewModel.ReviewOpinion) 
+                                       id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a>
                                 </h7>
                             </div>
 
                             <div>
                                 <h7>
-                                    <a @this.HiddenAttributeFor("Unlike", @movieViewModel.ReviewOpinion) id="Unlike_@movieViewModel.Id" class="review-movie mr-auto" href="#Like">Unlike</a>
+                                    <a @this.HiddenAttributeFor("Unlike", @movieViewModel.ReviewOpinion) 
+                                       id="Unlike_@movieViewModel.Id" class="review-movie mr-auto" href="#Like">Unlike</a>
                                 </h7>
                             </div>
 
@@ -199,13 +199,15 @@
 
                             <div>
                                 <h7>
-                                    <a @this.HiddenAttributeFor("Hate", @movieViewModel.ReviewOpinion) id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a>
+                                    <a @this.HiddenAttributeFor("Hate", @movieViewModel.ReviewOpinion) 
+                                       id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a>
                                 </h7>
                             </div>
 
                             <div>
                                 <h7>
-                                    <a @this.HiddenAttributeFor("Unhate", @movieViewModel.ReviewOpinion) id="Unhate_@movieViewModel.Id" class="review-movie mr-auto" href="#Hate">Unhate</a>
+                                    <a @this.HiddenAttributeFor("Unhate", @movieViewModel.ReviewOpinion) 
+                                       id="Unhate_@movieViewModel.Id" class="review-movie mr-auto" href="#Hate">Unhate</a>
                                 </h7>
                             </div>
 
