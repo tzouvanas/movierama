@@ -17,15 +17,15 @@ using Newtonsoft.Json;
 
 namespace Movierama.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/review")]
     [ApiController]
-    public class ReviewController : ControllerBase
+    public class ReviewApiController : ControllerBase
     {
-        private ILogger<ReviewController> logger;
+        private ILogger<ReviewApiController> logger;
         private IServiceProvider serviceProvider;
         private UserManager<ApplicationIdentityUser> userManager;
 
-        public ReviewController(ILogger<ReviewController> logger, 
+        public ReviewApiController(ILogger<ReviewApiController> logger, 
             IServiceProvider serviceProvider,
             UserManager<ApplicationIdentityUser> userManager) 
         {
@@ -39,12 +39,9 @@ namespace Movierama.Server.Controllers
             var reviewActionValue = Enum.Parse<ReviewAction>(reviewAction);
             var userId = this.userManager.GetUserId(HttpContext.User);
 
-            // record in memory
+            // record in redis
             var reviewCache = this.serviceProvider.GetService<ReviewCache>();
             reviewCache.RecordReviewAction(userId, movieId, (int)reviewActionValue);
-
-            // var reviewRepository = new ReviewRepository(this.serviceProvider);
-            // reviewRepository.PersistReview(userId, movieId, reviewActionValue);
         }
     }
 }

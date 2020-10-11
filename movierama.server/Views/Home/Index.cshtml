@@ -22,40 +22,70 @@
             document.getElementById("Like_Description_" + movieId.toString()).hidden = reviewOpinion != 'Like';
         }
 
+        function uploadReviewAction(movieId, reviewAction)
+        {
+            reviewOpinion = 'Neutral'
+            if (reviewAction == 'Like') reviewOpinion = 'Like'
+            if (reviewAction == 'Hate') reviewOpinion = 'Hate'
+            
+            $.ajax({
+                url: '/api/review',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                type: 'GET',
+                data: { movieId: movieId, reviewAction: reviewAction },
+                success: function (data, textStatus, xhr) {
+                    adjustReviewButtonsVisibility(reviewOpinion, movieId);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        }
+
+        function getFullDescription(movieId) {
+
+            $.ajax({
+                url: '/api/movie',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                type: 'GET',
+                data: { movieId: movieId },
+                success: function (data, textStatus, xhr) {
+                    console.log(data);
+                    alert(data)
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        }
+
         $(document).ready(function () {
 
             // end of page detection
             $(window).scroll(function () {
-                if ($(window).scrollTop() + $(window).height() + 20 >= $(document).height()) {
+                if ($(window).scrollTop() + $(window).height() + 10 >= $(document).height()) {
                     alert("End of page ...");
                 }
             });
 
-            // review click
+            // review action click
             $('.review-movie').click(function (event) {
-
                 event.preventDefault();
                 movieId = event.target.id.toString().split('_')[1];
                 reviewAction = event.target.id.toString().split('_')[0];
+                uploadReviewAction(movieId, reviewAction);
+                return false;
+            });
 
-                reviewOpinion = 'Neutral'
-                if (reviewAction == 'Like') reviewOpinion = 'Like'
-                if (reviewAction == 'Hate') reviewOpinion = 'Hate'
-
-                $.ajax({
-                    url: '/api/review',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    type: 'GET',
-                    data: { movieId: movieId, reviewAction: reviewAction },
-                    success: function (data, textStatus, xhr) {
-                        adjustReviewButtonsVisibility(reviewOpinion, movieId);
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        console.log(errorThrown);
-                    }
-                });
+            // load full description click
+            $('.full-description').click(function (event) {
+                event.preventDefault();
+                movieId = event.target.id.toString().split('_')[1];
+                getFullDescription(movieId);
                 return false;
             });
         });
@@ -63,7 +93,7 @@
 }
 
 @functions{
-    public string HiddenAttribute(string element, ReviewOpinion opinion)
+    public string HiddenAttributeFor(string element, ReviewOpinion opinion)
     {
         bool shouldBeHidden = false;
 
@@ -138,16 +168,49 @@
                         <div>&nbsp</div>
                         <div>&nbsp</div>
 
+                        @if (@movieViewModel.HasFullDescription)
+                        {
+                            <div>
+                                <h7>
+                                    <a id="FullDescription_@movieViewModel.Id" href="#FullDescription" class="full-description">Load Full Description</a>
+                                </h7>
+                            </div>
+                        }
+
                         @if (SignInManager.IsSignedIn(User) && @movieViewModel.CanReview)
                         {
-                            <div><h7><a @this.HiddenAttribute("Like", @movieViewModel.ReviewOpinion) id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a></h7></div>
-                            <div><h7><a @this.HiddenAttribute("Unlike", @movieViewModel.ReviewOpinion) id="Unlike_@movieViewModel.Id" class="review-movie" href="#Like">Unlike</a></h7></div>
-                            <div @this.HiddenAttribute("Like_Description", @movieViewModel.ReviewOpinion) id="Like_Description_@movieViewModel.Id"><p>You like this movie ...</p></div>
+                            <div>
+                                <h7>
+                                    <a @this.HiddenAttributeFor("Like", @movieViewModel.ReviewOpinion) id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a>
+                                </h7>
+                            </div>
+
+                            <div>
+                                <h7>
+                                    <a @this.HiddenAttributeFor("Unlike", @movieViewModel.ReviewOpinion) id="Unlike_@movieViewModel.Id" class="review-movie mr-auto" href="#Like">Unlike</a>
+                                </h7>
+                            </div>
+
+                            <div @this.HiddenAttributeFor("Like_Description", @movieViewModel.ReviewOpinion)
+                                 id="Like_Description_@movieViewModel.Id" class="mr-auto"><p>&nbsp|&nbspYou like this movie ...</p></div>
+
                             <div>&nbsp</div>
                             <div>&nbsp</div>
-                            <div><h7><a @this.HiddenAttribute("Hate", @movieViewModel.ReviewOpinion) id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a></h7></div>
-                            <div><h7><a @this.HiddenAttribute("Unhate", @movieViewModel.ReviewOpinion) id="Unhate_@movieViewModel.Id" class="review-movie" href="#Hate">Unhate</a></h7></div>
-                            <div @this.HiddenAttribute("Hate_Description", @movieViewModel.ReviewOpinion) id="Hate_Description_@movieViewModel.Id"><p>You hate this movie ...</p></div>
+
+                            <div>
+                                <h7>
+                                    <a @this.HiddenAttributeFor("Hate", @movieViewModel.ReviewOpinion) id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a>
+                                </h7>
+                            </div>
+
+                            <div>
+                                <h7>
+                                    <a @this.HiddenAttributeFor("Unhate", @movieViewModel.ReviewOpinion) id="Unhate_@movieViewModel.Id" class="review-movie mr-auto" href="#Hate">Unhate</a>
+                                </h7>
+                            </div>
+
+                            <div @this.HiddenAttributeFor("Hate_Description", @movieViewModel.ReviewOpinion)
+                                 id="Hate_Description_@movieViewModel.Id" class="mr-auto"><p>&nbsp|&nbspYou hate this movie ...</p></div>
                         }
                     </div>
                 </div>

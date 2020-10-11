@@ -34,7 +34,7 @@ namespace movierama.server.Controllers
             this.userManager = userManager;
         }
 
-        public IActionResult Index(string sortType, string ownerId)
+        public async Task<IActionResult> Index(string sortType, string ownerId)
         {
             ViewBag.OwnerId = ownerId;
             ViewBag.SortType = sortType;
@@ -44,12 +44,12 @@ namespace movierama.server.Controllers
             // collect movies
             var movieDbContext = this.serviceProvider.GetService<MoviesDbContext>();
             var movieRepository = new MovieRepository(movieDbContext);
-            var movies = movieRepository.GetMovies(userId, ownerId, sortType);
+            var movies = await movieRepository.GetMoviesAsync(userId, ownerId, sortType);
 
             // get owner names of collected movies
             var userContext = this.serviceProvider.GetService<AuthenticationDbContext>();
             var userRepository = new UserRepository(userContext);
-            var ownerNames = userRepository.GetFullNames(movies.Select(m => m.OwnerId).ToArray());
+            var ownerNames = await userRepository.GetFullNamesAsync(movies.Select(m => m.OwnerId).ToArray());
 
             // join data into view model
             var mapper = new MovieModelViewModelMapper();
@@ -57,7 +57,6 @@ namespace movierama.server.Controllers
 
             return View(movieViewModels);
         }
-
 
         public IActionResult Create()
         {
@@ -71,26 +70,11 @@ namespace movierama.server.Controllers
             if (ModelState.IsValid)
             {
                 var userId = this.userManager.GetUserId(HttpContext.User);
-
-                movie.OwnerId = userId;
-                movie.Counters = new CountersOfMovie()
-                {
-                    Hates = 0,
-                    Likes = 0,
-                    LastConsideredReviewId = 0
-                };
-
-                if (movie.Description.Length > 300)
-                {
-                    var fullDescription = movie.Description;
-                    movie.Description = movie.Description.Substring(0, 300) + "...";
-                    movie.FullDescription = new DescriptionOfMovie() { Description = fullDescription };
-                }
-
+                
                 var movieDbContext = this.serviceProvider.GetService<MoviesDbContext>();
-                movieDbContext.Movies.Add(movie);
-                await movieDbContext.SaveChangesAsync();
+                var movieRepository = new MovieRepository(movieDbContext);
 
+                await movieRepository.RegisterNewMovieAsync(movie, userId);
                 return RedirectToAction(nameof(Index));
             }
 

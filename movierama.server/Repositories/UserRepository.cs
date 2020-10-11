@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using movierama.server.Models;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,10 @@ namespace Movierama.Server.Repositories
             this.context = context;
         }
 
-        public string GetFullName(string userId) 
-        {
-            var user = this.context.Users.Where(item => item.Id == userId).Single();
-            return $"{user.FirstName} {user.LastName}";
-        }
-
-        public Dictionary<string, string> GetFullNames(string[] userIds)
+        public async Task<Dictionary<string, string>> GetFullNamesAsync(string[] userIds)
         {
             var result = new Dictionary<string, string>();
-            var users = this.context.Users.Where(item => userIds.Contains(item.Id)).ToList();
+            var users = await this.context.Users.Where(item => userIds.Contains(item.Id)).ToListAsync();
 
             foreach (var user in users)
                 result.Add(user.Id, $"{user.FirstName} {user.LastName}");

@@ -8,6 +8,8 @@ using Movierama.Server.Views.Home;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
+using System.Threading.Tasks;
 
 namespace Movierama.Server.Services
 {
@@ -27,7 +29,7 @@ namespace Movierama.Server.Services
             this.context = new MoviesDbContext(builder.Options);
         }
 
-        public List<Movie> GetMovies(string userId, string ownerId, string sortType)
+        public async Task<List<Movie>> GetMoviesAsync(string userId, string ownerId, string sortType)
         {
             bool ownerIsProvided = !string.IsNullOrEmpty(ownerId);
             bool userIsAuthenticated = !string.IsNullOrEmpty(userId);
@@ -48,17 +50,38 @@ namespace Movierama.Server.Services
             movieQuery = this.ApplySorting(movieQuery, sortTypeValue);
 
             // run query
-            movies = movieQuery.ToList();
+            movies = await movieQuery.ToListAsync();
 
             // if user is authenticated get reviews of user for loaded movies
             if (userIsAuthenticated)
             {
                 var movieIds = movies.Select(m => m.Id).ToArray();
                 var reviewQuery = context.Reviews.Where(r => r.UserId == userId && movieIds.Contains(r.MovieId));
-                var reviews = reviewQuery.ToList();
+                var reviews = await reviewQuery.ToListAsync();
             }
 
             return movies;
+        }
+
+        public async Task RegisterNewMovieAsync(Movie movie, string userId) 
+        {
+            movie.OwnerId = userId;
+            movie.Counters = new CountersOfMovie()
+            {
+                Hates = 0,
+                Likes = 0,
+                LastConsideredReviewId = 0
+            };
+
+            if (movie.Description.Length > 300)
+            {
+                var fullDescription = movie.Description;
+                movie.Description = movie.Description.Substring(0, 300) + "...";
+                movie.FullDescription = new DescriptionOfMovie() { Description = fullDescription };
+            }
+
+            this.context.Movies.Add(movie);
+            await this.context.SaveChangesAsync();
         }
 
         public void UpdateCounters(Dictionary<int, (int, int, int)> counters)
@@ -76,15 +99,15 @@ namespace Movierama.Server.Services
             this.context.SaveChanges();
         }
 
-        public string GetFullDescription(int movieId)
+        public async Task<string> GetFullDescriptionAsync(int movieId)
         {
-            DescriptionOfMovie descriptionOfMovie = null;
-
-            descriptionOfMovie = context.DescriptionOfMovies
+            // TODO : move out of repository as expression on repository's context.
+            var descriptionEntity = await this.context.DescriptionOfMovies
                 .Where(item => item.MovieId == movieId)
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
 
-            return descriptionOfMovie?.Description;
+            var result = (descriptionEntity == null) ? string.Empty : descriptionEntity.Description;
+            return result;
         }
 
         private IQueryable<Movie> ApplySorting(IQueryable<Movie> movieQuery, SortType sortType)
