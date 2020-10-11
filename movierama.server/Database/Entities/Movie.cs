@@ -23,7 +23,7 @@ namespace Movierama.Server.Database.Entities
 
         [Required]
         [DateInThePast]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         public DateTime PublicationDate { get; set; }
 
         [Required]

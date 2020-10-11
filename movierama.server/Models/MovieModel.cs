@@ -26,9 +26,11 @@ namespace Movierama.Server.Models
 
         public string OwnerFullName { get; set; }
 
-        public int PublicationDuration { get; set; }
+        public int PostDuration { get; set; }
 
-        public string UnitOfPulicationDuration { get; set; }
+        public string UnitOfPostDuration { get; set; }
+
+        public string PublicationDate { get; set; }
 
         public int LikeCount { get; set; }
 

@@ -127,6 +127,10 @@ namespace Movierama.Server.Services
                     movieQuery = movieQuery.OrderByDescending(m => m.CreationTime);
                     break;
 
+                case SortType.PublicationDate:
+                    movieQuery = movieQuery.OrderByDescending(m => m.PublicationDate);
+                    break;
+
                 // latest introduced movies
                 default:
                     movieQuery = movieQuery.OrderByDescending(s => s.Id);

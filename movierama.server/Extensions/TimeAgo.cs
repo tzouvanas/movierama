@@ -1,50 +1,106 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 
 namespace ExtensionMethods
 {
     public static class MyExtensions
     {
-        public static (int, string) TimeAgo(this DateTime dateTime)
+        public static (int, string) TimeAgo(this DateTime dt)
         {
-            int duration = 0;
+            var ts = new TimeSpan(DateTime.Now.Ticks - dt.Ticks);
+            double delta = Math.Abs(ts.TotalSeconds);
+
+            int value = 0;
             string unit = string.Empty;
 
-            var timeSpan = DateTime.Now.Subtract(dateTime);
-            if (timeSpan.TotalSeconds < 0)
-                timeSpan = dateTime.Subtract(DateTime.Now);
+            if (delta < 60)
+            {
+                if (ts.Seconds == 1)
+                {
+                    value = 1;
+                    unit = "second";
+                }
+                else 
+                {
+                    value = ts.Seconds;
+                    unit = "seconds";
+                }
 
-            if (timeSpan <= TimeSpan.FromSeconds(60))
-            {
-                duration = timeSpan.Seconds;
-                unit = "seconds";
+                return (value, unit);
+
             }
-            else if (timeSpan <= TimeSpan.FromMinutes(60))
+            
+            if (delta < 60 * 2)
             {
-                duration = timeSpan.Minutes;
+                value = 1;
+                unit = "minute";
+                return (value, unit);
+            }
+
+            if (delta < 45 * 60)
+            {
+                value = ts.Minutes;
                 unit = "minutes";
+                return (value, unit);
             }
-            else if (timeSpan <= TimeSpan.FromHours(24))
+            
+            if (delta < 90 * 60)
             {
-                duration = timeSpan.Hours;
+                value = 1;
+                unit = "hour";
+                return (value, unit);
+            }
+
+            if (delta < 24 * 60 * 60)
+            {
+                value = ts.Hours;
                 unit = "hours";
+                return (value, unit);
             }
-            else if (timeSpan <= TimeSpan.FromDays(30))
+           
+            if (delta < 48 * 60 * 60)
             {
-                duration = timeSpan.Days;
+                value = 1;
+                unit = "yesterday";
+                return (value, unit);
+            }
+           
+            if (delta < 30 * 24 * 60 * 60)
+            {
+                value = ts.Days;
                 unit = "days";
+                return (value, unit);
             }
-            else if (timeSpan <= TimeSpan.FromDays(365))
+
+            if (delta < 12 * 30 * 24 * 60 * 60)
             {
-                duration = timeSpan.Days / 30;
-                unit = "months";
+                int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
+                if (months <= 1)
+                {
+                    value = 1;
+                    unit = "month";
+                }
+                else {
+                    value = months;
+                    unit = "months";
+                }
+                return (value, unit);
+            }
+
+            int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
+
+            if (years == 1)
+            {
+                value = 1;
+                unit = "year";
             }
             else
             {
-                duration = timeSpan.Days / 365;
+                value = years;
                 unit = "years";
             }
 
-            return (duration, unit);
+            return (value, unit);
         }
     }
 }

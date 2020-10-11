@@ -25,8 +25,9 @@ namespace Movierama.Server.Models
                 OwnerFullName = hasOwner ? ownerNames[movie.OwnerId] : string.Empty,
                 LikeCount = hasCounters ? movie.Counters.Likes : 0,
                 HateCount = hasCounters ? movie.Counters.Hates : 0,
-                PublicationDuration = movie.PublicationDate.TimeAgo().Item1,
-                UnitOfPulicationDuration = movie.PublicationDate.TimeAgo().Item2,
+                PublicationDate = movie.PublicationDate.ToString("dd-MM-yyyy"),
+                PostDuration = movie.CreationTime.TimeAgo().Item1,
+                UnitOfPostDuration = movie.CreationTime.TimeAgo().Item2,
                 CanReview = movie.OwnerId != userId,
                 ReviewOpinion = hasReview ? movie.Reviews[0].Opinion : ReviewOpinion.Neutral
             };

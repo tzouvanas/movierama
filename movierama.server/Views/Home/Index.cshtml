@@ -62,13 +62,6 @@
 
         $(document).ready(function () {
 
-            // end of page detection
-            $(window).scroll(function () {
-                if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
-                    
-                }
-            });
-
             // review action click
             $('.review-movie').click(function (event) {
                 event.preventDefault();
@@ -97,12 +90,6 @@
             <div>Sort by :</div>
             <div>&nbsp</div>
             <div>&nbsp</div>
-            <div id="SortByDate">
-                @Html.ActionLink("Date", "Index", new { sortType = @SortType.Date.ToString(), ownerId = ViewBag.OwnerId })
-            </div>
-            <div>&nbsp</div>
-            <div>|</div>
-            <div>&nbsp</div>
             <div id="SortByLikes">
                 @Html.ActionLink("Likes", "Index", new { sortType = @SortType.Likes.ToString(), ownerId = ViewBag.OwnerId })
             </div>
@@ -115,6 +102,18 @@
             <div>&nbsp</div>
             <div>|</div>
             <div>&nbsp</div>
+            <div id="SortByDate">
+                @Html.ActionLink("Date", "Index", new { sortType = @SortType.Date.ToString(), ownerId = ViewBag.OwnerId })
+            </div>
+            <div>&nbsp</div>
+            <div>|</div>
+            <div>&nbsp</div>
+            <div id="SortByPublicationDate">
+                @Html.ActionLink("Publication Date", "Index", new { sortType = @SortType.PublicationDate.ToString(), ownerId = ViewBag.OwnerId })
+            </div>
+            <div>&nbsp</div>
+            <div>|</div>
+            <div>&nbsp</div>
         </div>
         <!-- Movies-->
         @foreach (var movieViewModel in Model)
@@ -123,7 +122,9 @@
                 <div class="card-body">
                     <h5 class="card-title">@movieViewModel.Title</h5>
 
-                    <p class="card-text">Posted by: @Html.ActionLink(movieViewModel.OwnerFullName, "Index", new { sortType = ViewBag.SortType, ownerId = movieViewModel.OwnerId }) @movieViewModel.PublicationDuration @movieViewModel.UnitOfPulicationDuration ago</p>
+                    <h8><p class="card-text">Publication Date:&nbsp&nbsp @movieViewModel.PublicationDate</p></h8>
+
+                    <p class="card-text">Posted by: @Html.ActionLink(movieViewModel.OwnerFullName, "Index", new { sortType = ViewBag.SortType, ownerId = movieViewModel.OwnerId }) @movieViewModel.PostDuration @movieViewModel.UnitOfPostDuration ago</p>
 
                     <p class="card-text">@movieViewModel.Description</p>
 
