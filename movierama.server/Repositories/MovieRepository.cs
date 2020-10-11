@@ -29,13 +29,10 @@ namespace Movierama.Server.Services
             this.context = new MoviesDbContext(builder.Options);
         }
 
-        public async Task<List<Movie>> GetMoviesAsync(string userId, string ownerId, string sortType)
+        public async Task<List<Movie>> GetMoviesAsync(string userId, string ownerId, SortBy sortBy, SortOrder sortOrder)
         {
             bool ownerIsProvided = !string.IsNullOrEmpty(ownerId);
             bool userIsAuthenticated = !string.IsNullOrEmpty(userId);
-
-            SortType sortTypeValue = SortType.None;
-            Enum.TryParse<SortType>(sortType, out sortTypeValue);
 
             // start building movies query
             IQueryable<Movie> movieQuery = context.Movies.Include(m => m.Counters);
@@ -45,7 +42,7 @@ namespace Movierama.Server.Services
                 movieQuery = movieQuery.Where(m => m.OwnerId == ownerId);
 
             // apply sorting
-            movieQuery = this.ApplySorting(movieQuery, sortTypeValue);
+            movieQuery = this.ApplySorting(movieQuery, sortBy, sortOrder);
 
             // run query
             var movies = await movieQuery.ToListAsync();
@@ -111,29 +108,36 @@ namespace Movierama.Server.Services
             return result;
         }
 
-        private IQueryable<Movie> ApplySorting(IQueryable<Movie> movieQuery, SortType sortType)
+        private IQueryable<Movie> ApplySorting(IQueryable<Movie> movieQuery, SortBy sortType, SortOrder sortOrder)
         {
             switch (sortType)
             {
-                case SortType.Likes:
-                    movieQuery = movieQuery.OrderByDescending(m => m.Counters.Likes);
+                case SortBy.Likes:
+                    if (sortOrder == SortOrder.Asc)
+                        movieQuery = movieQuery.OrderBy(m => m.Counters.Likes);
+                    else
+                        movieQuery = movieQuery.OrderByDescending(m => m.Counters.Likes);
                     break;
 
-                case SortType.Hates:
-                    movieQuery = movieQuery.OrderByDescending(m => m.Counters.Hates);
+                case SortBy.Hates:
+                    if (sortOrder == SortOrder.Asc)
+                        movieQuery = movieQuery.OrderBy(m => m.Counters.Hates);
+                    else
+                        movieQuery = movieQuery.OrderByDescending(m => m.Counters.Hates);
                     break;
 
-                case SortType.Date:
-                    movieQuery = movieQuery.OrderByDescending(m => m.CreationTime);
+                case SortBy.Date:
+                    if (sortOrder == SortOrder.Asc)
+                        movieQuery = movieQuery.OrderBy(m => m.CreationTime);
+                    else
+                        movieQuery = movieQuery.OrderByDescending(m => m.CreationTime);
                     break;
 
-                case SortType.PublicationDate:
-                    movieQuery = movieQuery.OrderByDescending(m => m.PublicationDate);
-                    break;
-
-                // latest introduced movies
-                default:
-                    movieQuery = movieQuery.OrderByDescending(s => s.Id);
+                case SortBy.PublicationDate:
+                    if (sortOrder == SortOrder.Asc)
+                        movieQuery = movieQuery.OrderBy(m => m.PublicationDate);
+                    else
+                        movieQuery = movieQuery.OrderByDescending(m => m.PublicationDate);
                     break;
             }
 

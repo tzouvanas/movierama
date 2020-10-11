@@ -93,25 +93,25 @@
             <div>&nbsp</div>
             <div>&nbsp</div>
             <div id="SortByLikes">
-                @Html.ActionLink("Likes", "Index", new { sortType = @SortType.Likes.ToString(), ownerId = ViewBag.OwnerId })
+                @Html.ActionLink("Likes", "Index", new { sortBy = SortBy.Likes.ToString(), sortOrder = ViewBag.LikesSortOrder, ownerId = ViewBag.OwnerId })
             </div>
             <div>&nbsp</div>
             <div>|</div>
             <div>&nbsp</div>
             <div id="SortByHates">
-                @Html.ActionLink("Hates", "Index", new { sortType = @SortType.Hates.ToString(), ownerId = ViewBag.OwnerId })
+                @Html.ActionLink("Hates", "Index", new { sortBy = SortBy.Hates.ToString(), sortOrder = ViewBag.HatesSortOrder, ownerId = ViewBag.OwnerId })
             </div>
             <div>&nbsp</div>
             <div>|</div>
             <div>&nbsp</div>
             <div id="SortByDate">
-                @Html.ActionLink("Date", "Index", new { sortType = @SortType.Date.ToString(), ownerId = ViewBag.OwnerId })
+                @Html.ActionLink("Date", "Index", new { sortBy = SortBy.Date.ToString(), sortOrder = ViewBag.DateSortOrder, ownerId = ViewBag.OwnerId })
             </div>
             <div>&nbsp</div>
             <div>|</div>
             <div>&nbsp</div>
             <div id="SortByPublicationDate">
-                @Html.ActionLink("Publication Date", "Index", new { sortType = @SortType.PublicationDate.ToString(), ownerId = ViewBag.OwnerId })
+                @Html.ActionLink("Publication Date", "Index", new { sortBy = SortBy.PublicationDate.ToString(), sortOrder = ViewBag.PublicationDateSortOrder, ownerId = ViewBag.OwnerId })
             </div>
             <div>&nbsp</div>
             <div>|</div>
@@ -125,7 +125,7 @@
                     <h5 class="card-title">@movieViewModel.Title</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Publication Date:&nbsp&nbsp @movieViewModel.PublicationDate</h6>
 
-                    <p class="card-text">Posted by: @Html.ActionLink(movieViewModel.OwnerFullName, "Index", new { sortType = ViewBag.SortType, ownerId = movieViewModel.OwnerId }) @movieViewModel.PostDuration @movieViewModel.UnitOfPostDuration ago</p>
+                    <p class="card-text">Posted by: @Html.ActionLink(movieViewModel.OwnerFullName, "Index", new { ownerId = movieViewModel.OwnerId }) @movieViewModel.PostDuration @movieViewModel.UnitOfPostDuration ago</p>
 
                     <p class="card-text">@movieViewModel.Description</p>
 

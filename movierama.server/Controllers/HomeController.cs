@@ -15,6 +15,7 @@ using Movierama.Server.Database.Entities;
 using Movierama.Server.Models;
 using Movierama.Server.Repositories;
 using Movierama.Server.Services;
+using Movierama.Server.Views.Home;
 
 namespace movierama.server.Controllers
 {
@@ -34,17 +35,35 @@ namespace movierama.server.Controllers
             this.userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(string sortType, string ownerId)
+        public async Task<IActionResult> Index(string ownerId, string sortBy, string sortOrder)
         {
+            // store values in ViewBag for html binding
             ViewBag.OwnerId = ownerId;
-            ViewBag.SortType = sortType;
+            
+            var sortByValue = SortingHelper.ResolveSortBy(sortBy);
+            ViewBag.SortType = sortBy;
+            
+            var sortOderValue = SortingHelper.ResolveSortOrder(sortOrder);
 
+            if (sortByValue == SortBy.Date)
+                ViewBag.DateSortOrder = SortingHelper.SwapSortOrder(sortOderValue);
+
+            if (sortByValue == SortBy.PublicationDate)
+                ViewBag.PublicationDateSortOrder = SortingHelper.SwapSortOrder(sortOderValue);
+
+            if (sortByValue == SortBy.Likes)
+                ViewBag.LikesSortOrder = SortingHelper.SwapSortOrder(sortOderValue);
+
+            if (sortByValue == SortBy.Hates)
+                ViewBag.HatesSortOrder = SortingHelper.SwapSortOrder(sortOderValue);
+
+            // get current user
             var userId = this.userManager.GetUserId(HttpContext.User);
             
             // collect movies
             var movieDbContext = this.serviceProvider.GetService<MoviesDbContext>();
             var movieRepository = new MovieRepository(movieDbContext);
-            var movies = await movieRepository.GetMoviesAsync(userId, ownerId, sortType);
+            var movies = await movieRepository.GetMoviesAsync(userId, ownerId, sortByValue, sortOderValue);
 
             // get owner names of collected movies
             var userContext = this.serviceProvider.GetService<AuthenticationDbContext>();
