@@ -28,6 +28,8 @@
             if (reviewAction == 'Like') reviewOpinion = 'Like'
             if (reviewAction == 'Hate') reviewOpinion = 'Hate'
 
+            adjustReviewButtonsVisibility(reviewOpinion, movieId);
+
             $.ajax({
                 url: '/api/review',
                 headers: {
@@ -36,7 +38,6 @@
                 type: 'GET',
                 data: { movieId: movieId, reviewAction: reviewAction },
                 success: function (data, textStatus, xhr) {
-                    adjustReviewButtonsVisibility(reviewOpinion, movieId);
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.log(errorThrown);
