@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using movierama.server.Models;
 using Movierama.Server.Cache;
 using Movierama.Server.Database;
 using Movierama.Server.Models;
@@ -34,14 +35,18 @@ namespace Movierama.Server.Controllers
             this.serviceProvider = serviceProvider;
         }
 
-        public void Review(int movieId, string reviewAction)
+        public async Task Review(int movieId, string reviewAction)
         {
-            var reviewActionValue = Enum.Parse<ReviewAction>(reviewAction);
             var userId = this.userManager.GetUserId(HttpContext.User);
+            var reviewActionValue = Enum.Parse<ReviewAction>(reviewAction);
 
             // record in redis
-            var reviewCache = this.serviceProvider.GetService<ReviewCache>();
-            reviewCache.RecordReviewAction(userId, movieId, (int)reviewActionValue);
+            //// var reviewCache = this.serviceProvider.GetService<ReviewCache>();
+            //// reviewCache.RecordReviewAction(userId, movieId, (int)reviewActionValue);
+
+            // directly persist in db
+            var reviewRepository = new ReviewRepository(this.serviceProvider);
+            await reviewRepository.PersistReviewActionAsync(userId, movieId, reviewActionValue);
         }
     }
 }

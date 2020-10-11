@@ -5,7 +5,7 @@ namespace ExtensionMethods
 {
     public static class MyExtensions
     {
-        public static (int, string) TimeAgo(this DateTime dt)
+        public static (int, string) TimeDistanceFromNow(this DateTime dt)
         {
             var ts = new TimeSpan(DateTime.Now.Ticks - dt.Ticks);
             double delta = Math.Abs(ts.TotalSeconds);

@@ -43,7 +43,9 @@ namespace Movierama.Server.Quartz
                     {
                         var reviewRepository = new ReviewRepository(this.configuration);
                         var reviewAction = reviewActionQueue.Peek();
-                        reviewRepository.PersistReview(userId, movieId, (ReviewAction)reviewAction);
+                        var task = reviewRepository.PersistReviewActionAsync(userId, movieId, (ReviewAction)reviewAction);
+                        task.Start();
+                        task.Wait();
                         reviewActionQueue.Dequeue();
                     }
                 }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Runtime.CompilerServices;
 
 namespace Movierama.Server.Repositories
 {
@@ -31,7 +32,7 @@ namespace Movierama.Server.Repositories
             this.context = new MoviesDbContext(builder.Options);
         }
 
-        public void PersistReview(string userId, int movieId, ReviewAction reviewAction)
+        public async Task PersistReviewActionAsync(string userId, int movieId, ReviewAction reviewAction)
         {
             // create review history item
             var reviewHistory = new ReviewHistory()
@@ -66,7 +67,7 @@ namespace Movierama.Server.Repositories
                     (reviewAction == ReviewAction.Hate ? ReviewOpinion.Hate : ReviewOpinion.Neutral);
             }
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
         }
 
         public Dictionary<int, (int, int, int)> CountPendingReviews()
