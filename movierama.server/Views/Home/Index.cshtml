@@ -1,6 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Movierama.Server.Database
-@using Movierama.Server.Models
 @using Movierama.Server.Views.Home
 @model IEnumerable<Movierama.Server.Models.MovieModel>
 @inject SignInManager<ApplicationIdentityUser> SignInManager
@@ -22,11 +21,11 @@
             document.getElementById("Like_Description_" + movieId.toString()).hidden = reviewOpinion != 'Like';
         }
 
-        function uploadReviewAction(movieId, reviewAction){
+        function uploadReviewAction(movieId, reviewAction) {
             reviewOpinion = 'Neutral'
             if (reviewAction == 'Like') reviewOpinion = 'Like'
             if (reviewAction == 'Hate') reviewOpinion = 'Hate'
-            
+
             $.ajax({
                 url: '/api/review',
                 headers: {
@@ -90,36 +89,6 @@
     </script>
 }
 
-@functions{
-    public string HiddenAttributeFor(string element, ReviewOpinion opinion)
-    {
-        bool shouldBeHidden = false;
-
-        switch (element)
-        {
-            case "Hate":
-            case "Like":
-                shouldBeHidden = opinion != ReviewOpinion.Neutral;
-                break;
-
-            case "Unhate":
-            case "Hate_Description":
-                shouldBeHidden = opinion != ReviewOpinion.Hate;
-                break;
-
-            case "Unlike":
-            case "Like_Description":
-                shouldBeHidden = opinion != ReviewOpinion.Like;
-                break;
-        }
-
-        if (shouldBeHidden)
-            return "hidden";
-
-        return string.Empty;
-    }
-}
-
 <div class="row">
     <div class="col-md-9">
 
@@ -170,7 +139,7 @@
                         {
                             <div>
                                 <h7>
-                                    <a id="FullDescription_@movieViewModel.Id" href="#FullDescription" class="full-description">Load Full Description</a>
+                                    <a id="FullDescription_@movieViewModel.Id" href="#FullDescription" class="full-description">Full Description&nbsp</a>
                                 </h7>
                             </div>
                         }
@@ -179,19 +148,19 @@
                         {
                             <div>
                                 <h7>
-                                    <a @this.HiddenAttributeFor("Like", @movieViewModel.ReviewOpinion) 
+                                    <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Like", @movieViewModel.ReviewOpinion)
                                        id="Like_@movieViewModel.Id" class="review-movie" href="#Like">Like</a>
                                 </h7>
                             </div>
 
                             <div>
                                 <h7>
-                                    <a @this.HiddenAttributeFor("Unlike", @movieViewModel.ReviewOpinion) 
+                                    <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Unlike", @movieViewModel.ReviewOpinion)
                                        id="Unlike_@movieViewModel.Id" class="review-movie mr-auto" href="#Like">Unlike</a>
                                 </h7>
                             </div>
 
-                            <div @this.HiddenAttributeFor("Like_Description", @movieViewModel.ReviewOpinion)
+                            <div @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Like_Description", @movieViewModel.ReviewOpinion)
                                  id="Like_Description_@movieViewModel.Id" class="mr-auto"><p>&nbsp|&nbspYou like this movie ...</p></div>
 
                             <div>&nbsp</div>
@@ -199,19 +168,19 @@
 
                             <div>
                                 <h7>
-                                    <a @this.HiddenAttributeFor("Hate", @movieViewModel.ReviewOpinion) 
+                                    <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Hate", @movieViewModel.ReviewOpinion)
                                        id="Hate_@movieViewModel.Id" class="review-movie" href="#Hate">Hate</a>
                                 </h7>
                             </div>
 
                             <div>
                                 <h7>
-                                    <a @this.HiddenAttributeFor("Unhate", @movieViewModel.ReviewOpinion) 
+                                    <a @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Unhate", @movieViewModel.ReviewOpinion)
                                        id="Unhate_@movieViewModel.Id" class="review-movie mr-auto" href="#Hate">Unhate</a>
                                 </h7>
                             </div>
 
-                            <div @this.HiddenAttributeFor("Hate_Description", @movieViewModel.ReviewOpinion)
+                            <div @ReviewActionHiddenAttributeExtension.HiddenAttributeFor("Hate_Description", @movieViewModel.ReviewOpinion)
                                  id="Hate_Description_@movieViewModel.Id" class="mr-auto"><p>&nbsp|&nbspYou hate this movie ...</p></div>
                         }
                     </div>
