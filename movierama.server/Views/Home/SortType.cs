@@ -10,6 +10,6 @@ namespace Movierama.Server.Views.Home
         None,
         Likes,
         Hates,
-        PublicationDate
+        Date
     }
 }

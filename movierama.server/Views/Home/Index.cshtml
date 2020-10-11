@@ -64,8 +64,8 @@
 
             // end of page detection
             $(window).scroll(function () {
-                if ($(window).scrollTop() + $(window).height() + 10 >= $(document).height()) {
-                    alert("End of page ...");
+                if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+                    
                 }
             });
 
@@ -97,8 +97,8 @@
             <div>Sort by :</div>
             <div>&nbsp</div>
             <div>&nbsp</div>
-            <div id="SortByPublicationDate">
-                @Html.ActionLink("Publication Date", "Index", new { sortType = @SortType.PublicationDate.ToString(), ownerId = ViewBag.OwnerId })
+            <div id="SortByDate">
+                @Html.ActionLink("Date", "Index", new { sortType = @SortType.Date.ToString(), ownerId = ViewBag.OwnerId })
             </div>
             <div>&nbsp</div>
             <div>|</div>

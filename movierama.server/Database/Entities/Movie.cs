@@ -18,6 +18,9 @@ namespace Movierama.Server.Database.Entities
         [StringLength(50, ErrorMessage = "Name length can't be more than 50.")]
         public string Title { get; set; }
 
+        public DateTime CreationTime { get; set; }
+
+
         [Required]
         [DateInThePast]
         [DataType(DataType.DateTime)]

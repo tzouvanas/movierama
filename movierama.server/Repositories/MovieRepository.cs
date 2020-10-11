@@ -64,7 +64,7 @@ namespace Movierama.Server.Services
         public async Task RegisterNewMovieAsync(Movie movie, string userId)
         {
             movie.OwnerId = userId;
-
+            movie.CreationTime = DateTime.Now;
             // initiate movie counters
             movie.Counters = new CountersOfMovie()
             {
@@ -123,8 +123,8 @@ namespace Movierama.Server.Services
                     movieQuery = movieQuery.OrderByDescending(m => m.Counters.Hates);
                     break;
 
-                case SortType.PublicationDate:
-                    movieQuery = movieQuery.OrderByDescending(s => s.PublicationDate);
+                case SortType.Date:
+                    movieQuery = movieQuery.OrderByDescending(m => m.CreationTime);
                     break;
 
                 // latest introduced movies
