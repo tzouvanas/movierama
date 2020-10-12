@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server.Database.Entities
 {
-    public class Review
+    public class Review : Entity
     {
         [Key]
         public string UserId { get; set; }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -14,9 +15,11 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server.Repositories
 {
-    public class MovieRepository
+    public class MovieRepository : IRepository<Movie>
     {
         private readonly MoviesDbContext context;
+
+        public DbSet<Movie> Entities { get { return this.context.Movies; } }
 
         public MovieRepository(MoviesDbContext context)
         {

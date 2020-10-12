@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server.Database.Entities
 {
-    public class CountersOfMovie
+    public class CountersOfMovie : Entity
     {
         [Key]
         public int MovieId { get; set; }

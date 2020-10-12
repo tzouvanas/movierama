@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server.Database.Entities
 {
-    public class ReviewHistory
+    public class ReviewHistory : Entity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

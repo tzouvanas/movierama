@@ -14,10 +14,12 @@ using System.Runtime.CompilerServices;
 
 namespace Movierama.Server.Repositories
 {
-    public class ReviewRepository
+    public class ReviewRepository : IRepository<Review>
     {
         private MoviesDbContext context;
         private IServiceProvider serviceProvider;
+
+        public DbSet<Review> Entities { get { return this.context.Reviews; } }
 
         public ReviewRepository(IServiceProvider serviceProvider)
         {
