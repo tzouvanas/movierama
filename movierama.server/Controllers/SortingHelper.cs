@@ -50,5 +50,20 @@ namespace Movierama.Server.Views.Home
 
             return sortOrderValue;
         }
+
+        internal static void UpdateViewBag(dynamic ViewBag, SortBy sortByValue, SortOrder sortOrderValue)
+        {
+            if (sortByValue == SortBy.Date)
+                ViewBag.DateSortOrder = SortingHelper.SwapSortOrder(sortOrderValue);
+
+            if (sortByValue == SortBy.PublicationDate)
+                ViewBag.PublicationDateSortOrder = SortingHelper.SwapSortOrder(sortOrderValue);
+
+            if (sortByValue == SortBy.Likes)
+                ViewBag.LikesSortOrder = SortingHelper.SwapSortOrder(sortOrderValue);
+
+            if (sortByValue == SortBy.Hates)
+                ViewBag.HatesSortOrder = SortingHelper.SwapSortOrder(sortOrderValue);
+        }
     }
 }

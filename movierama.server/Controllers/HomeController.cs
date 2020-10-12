@@ -43,19 +43,8 @@ namespace movierama.server.Controllers
             var sortByValue = SortingHelper.ResolveSortBy(sortBy);
             ViewBag.SortType = sortBy;
             
-            var sortOderValue = SortingHelper.ResolveSortOrder(sortOrder);
-
-            if (sortByValue == SortBy.Date)
-                ViewBag.DateSortOrder = SortingHelper.SwapSortOrder(sortOderValue);
-
-            if (sortByValue == SortBy.PublicationDate)
-                ViewBag.PublicationDateSortOrder = SortingHelper.SwapSortOrder(sortOderValue);
-
-            if (sortByValue == SortBy.Likes)
-                ViewBag.LikesSortOrder = SortingHelper.SwapSortOrder(sortOderValue);
-
-            if (sortByValue == SortBy.Hates)
-                ViewBag.HatesSortOrder = SortingHelper.SwapSortOrder(sortOderValue);
+            var sortOrderValue = SortingHelper.ResolveSortOrder(sortOrder);
+            SortingHelper.UpdateViewBag(ViewBag, sortByValue, sortOrderValue);
 
             // get current user
             var userId = this.userManager.GetUserId(HttpContext.User);
@@ -63,7 +52,7 @@ namespace movierama.server.Controllers
             // collect movies
             var movieDbContext = this.serviceProvider.GetService<MoviesDbContext>();
             var movieRepository = new MovieRepository(movieDbContext);
-            var movies = await movieRepository.GetMoviesAsync(userId, ownerId, sortByValue, sortOderValue);
+            var movies = await movieRepository.GetMoviesAsync(userId, ownerId, sortByValue, sortOrderValue);
 
             // get owner names of collected movies
             var userContext = this.serviceProvider.GetService<AuthenticationDbContext>();
