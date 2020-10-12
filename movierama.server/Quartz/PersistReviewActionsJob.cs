@@ -41,6 +41,7 @@ namespace Movierama.Server.Quartz
 
                     while (reviewActionQueue.Count > 0) 
                     {
+                        // TODO : Optimize queue so that (like - unlike) , (hate - unhate) pairs are ignored all together.
                         var reviewRepository = new ReviewRepository(this.configuration);
                         var reviewAction = reviewActionQueue.Peek();
                         var task = reviewRepository.PersistReviewActionAsync(userId, movieId, (ReviewAction)reviewAction);

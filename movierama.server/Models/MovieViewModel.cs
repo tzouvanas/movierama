@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server.Models
 {
-    public class MovieModel
+    public class MovieViewModel
     {
         public int Id { get; set; }
 

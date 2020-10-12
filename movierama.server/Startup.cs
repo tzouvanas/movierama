@@ -58,10 +58,7 @@ namespace movierama.server
 
             // Add our job
             services.AddSingleton<UpdateCountersJob>();
-            services.AddSingleton(new JobSchedule(jobType: typeof(UpdateCountersJob),cronExpression: "0/10 * * * * ?"));
-
-            //services.AddSingleton<PersistReviewActionsJob>();
-            //services.AddSingleton(new JobSchedule(jobType: typeof(PersistReviewActionsJob), cronExpression: "0/30 * * * * ?"));
+            services.AddSingleton(new JobSchedule(jobType: typeof(UpdateCountersJob),cronExpression: "0/20 * * * * ?"));
 
             services.AddHostedService<QuartzHostedService>();
         }
@@ -77,7 +74,8 @@ namespace movierama.server
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, 
+                // see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();

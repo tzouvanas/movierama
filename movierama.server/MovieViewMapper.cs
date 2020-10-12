@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Movierama.Server.Models
 {
-    public class MovieModelViewModelMapper
+    public class MovieViewMapper
     {
-        public MovieModel Map(Movie movie, string userId, Dictionary<string, string> ownerNames) 
+        public MovieViewModel Map(Movie movie, string userId, Dictionary<string, string> ownerNames) 
         {
             bool hasCounters = movie.Counters != null;
             bool hasOwner = ownerNames.ContainsKey(movie.OwnerId);
             bool hasReview = movie.Reviews != null && movie.Reviews.Count > 0;
 
-            var viewModel = new MovieModel
+            var viewModel = new MovieViewModel
             {
                 Id = movie.Id,
                 Title = movie.Title,

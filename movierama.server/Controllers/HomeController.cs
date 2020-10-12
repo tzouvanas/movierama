@@ -71,7 +71,7 @@ namespace movierama.server.Controllers
             var ownerNames = await userRepository.GetFullNamesAsync(movies.Select(m => m.OwnerId).ToArray());
 
             // join data into view model
-            var mapper = new MovieModelViewModelMapper();
+            var mapper = new MovieViewMapper();
             var movieViewModels = movies.Select(item => mapper.Map(item, userId, ownerNames)).ToList();
 
             return View(movieViewModels);
