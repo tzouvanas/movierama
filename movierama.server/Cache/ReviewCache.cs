@@ -3,18 +3,13 @@ using System.Collections.Generic;
 
 namespace Movierama.Server.Cache
 {
-    public class ReviewCache
+    public class ReviewCache : MemoryCache
     {
-        public Dictionary<string, Dictionary<int, Queue<int>>> Data
+        public ReviewCache()
+            :base()
         {
-            get;
-            private set;
         }
 
-        public ReviewCache()
-        {
-            this.Data = new Dictionary<string, Dictionary<int, Queue<int>>>();
-        }
         public void RecordReviewAction(string userId, int movieId, int reviewAction)
         {
             // check if user is registered
