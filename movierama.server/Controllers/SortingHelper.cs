@@ -53,6 +53,8 @@ namespace Movierama.Server.Views.Home
 
         internal static void UpdateViewBag(dynamic ViewBag, SortBy sortByValue, SortOrder sortOrderValue)
         {
+            ViewBag.SortType = sortByValue;
+
             if (sortByValue == SortBy.Date)
                 ViewBag.DateSortOrder = SortingHelper.SwapSortOrder(sortOrderValue);
 

@@ -37,13 +37,11 @@ namespace movierama.server.Controllers
 
         public async Task<IActionResult> Index(string ownerId, string sortBy, string sortOrder)
         {
-            // store values in ViewBag for html binding
-            ViewBag.OwnerId = ownerId;
-            
+            // update view bag
             var sortByValue = SortingHelper.ResolveSortBy(sortBy);
-            ViewBag.SortType = sortBy;
-            
             var sortOrderValue = SortingHelper.ResolveSortOrder(sortOrder);
+
+            ViewBag.OwnerId = ownerId;
             SortingHelper.UpdateViewBag(ViewBag, sortByValue, sortOrderValue);
 
             // get current user
