@@ -1,11 +1,6 @@
-﻿using Movierama.Server.Database.Entities;
-using Movierama.Server.Models;
-using System;
-using System.Collections.Generic;
+﻿using Movierama.Server.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Movierama.Server.Database.Entities
 {

@@ -1,16 +1,13 @@
-﻿using movierama.server.Models;
-using Movierama.Server.Database.Entities;
-using System;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using Movierama.Server.Models;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using movierama.server.Models;
+using Movierama.Server.Database.Entities;
+using Movierama.Server.Models;
+using System;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Runtime.CompilerServices;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Movierama.Server.Repositories
 {

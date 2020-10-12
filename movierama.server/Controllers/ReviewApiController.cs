@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using movierama.server.Models;
 using Movierama.Server.Cache;
 using Movierama.Server.Database;
 using Movierama.Server.Models;
 using Movierama.Server.Repositories;
-using Newtonsoft.Json;
+using System;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,9 +22,9 @@ namespace Movierama.Server.Controllers
         private IServiceProvider serviceProvider;
         private UserManager<ApplicationIdentityUser> userManager;
 
-        public ReviewApiController(ILogger<ReviewApiController> logger, 
+        public ReviewApiController(ILogger<ReviewApiController> logger,
             IServiceProvider serviceProvider,
-            UserManager<ApplicationIdentityUser> userManager) 
+            UserManager<ApplicationIdentityUser> userManager)
         {
             this.logger = logger;
             this.userManager = userManager;
@@ -53,7 +49,7 @@ namespace Movierama.Server.Controllers
             reviewActionCache.Set(userId, movieId, reviewActionValue);
         }
 
-        private bool IsValidReviewAction(string userId, int movieId, string reviewAction) 
+        private bool IsValidReviewAction(string userId, int movieId, string reviewAction)
         {
             ReviewAction reviewActionValue;
             var isValidString = Enum.TryParse<ReviewAction>(reviewAction, out reviewActionValue);
@@ -68,10 +64,10 @@ namespace Movierama.Server.Controllers
                 return true;
 
             bool result = true;
-            
-            if (lastReviewAction.HasValue) 
+
+            if (lastReviewAction.HasValue)
             {
-                switch (lastReviewAction.Value) 
+                switch (lastReviewAction.Value)
                 {
                     case ReviewAction.Like:
                         result = reviewActionValue == ReviewAction.Unlike;

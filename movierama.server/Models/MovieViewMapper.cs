@@ -1,16 +1,12 @@
 ﻿using ExtensionMethods;
-using movierama.server.Models;
 using Movierama.Server.Database.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Movierama.Server.Models
 {
     public class MovieViewMapper
     {
-        public MovieViewModel Map(Movie movie, string userId, Dictionary<string, string> ownerNames) 
+        public MovieViewModel Map(Movie movie, string userId, Dictionary<string, string> ownerNames)
         {
             bool hasCounters = movie.Counters != null;
             bool hasOwner = ownerNames.ContainsKey(movie.OwnerId);

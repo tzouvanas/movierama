@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Hosting;
+using Quartz;
+using Quartz.Spi;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Quartz;
-using Quartz.Spi;
 
 public class QuartzHostedService : IHostedService
 {

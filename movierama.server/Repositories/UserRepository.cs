@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using movierama.server.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,8 @@ namespace Movierama.Server.Repositories
     {
         private AuthenticationDbContext context;
 
-        public UserRepository(AuthenticationDbContext context) {
+        public UserRepository(AuthenticationDbContext context)
+        {
             this.context = context;
         }
 

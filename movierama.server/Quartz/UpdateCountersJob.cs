@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using Quartz;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Movierama.Server.Repositories;
+using Quartz;
 using System;
+using System.Threading.Tasks;
 
 namespace Movierama.Server.Quartz
 {
@@ -31,7 +31,7 @@ namespace Movierama.Server.Quartz
                 var movieRepository = new MovieRepository(this.configuration);
                 movieRepository.UpdateCounters(pendingReviewCounters);
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 // since this is a back end job simply log the error.
                 this.logger.LogError(e.ToString());

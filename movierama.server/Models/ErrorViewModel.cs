@@ -1,5 +1,3 @@
-using System;
-
 namespace movierama.server.Models
 {
     public class ErrorViewModel

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography.Xml;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +10,10 @@ using Movierama.Server.Database;
 using Movierama.Server.Database.Entities;
 using Movierama.Server.Models;
 using Movierama.Server.Repositories;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace movierama.server.Controllers
 {
@@ -45,7 +44,7 @@ namespace movierama.server.Controllers
 
             // get current user
             var userId = this.userManager.GetUserId(HttpContext.User);
-            
+
             // collect movies
             var movieDbContext = this.serviceProvider.GetService<MoviesDbContext>();
             var movieRepository = new MovieRepository(movieDbContext);
@@ -75,7 +74,7 @@ namespace movierama.server.Controllers
             if (ModelState.IsValid)
             {
                 var userId = this.userManager.GetUserId(HttpContext.User);
-                
+
                 var movieDbContext = this.serviceProvider.GetService<MoviesDbContext>();
                 var movieRepository = new MovieRepository(movieDbContext);
 

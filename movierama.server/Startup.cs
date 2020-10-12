@@ -1,24 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using movierama.server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using movierama.server.Models;
-using Movierama.Server.Database;
 using Movierama.Server.Cache;
-using Quartz.Spi;
-using Quartz;
+using Movierama.Server.Database;
 using Movierama.Server.Quartz;
+using Quartz;
 using Quartz.Impl;
+using Quartz.Spi;
 
 namespace movierama.server
 {
@@ -36,7 +28,7 @@ namespace movierama.server
         {
             var defaultConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<AuthenticationDbContext>(options =>options.UseSqlServer(defaultConnectionString));
+            services.AddDbContext<AuthenticationDbContext>(options => options.UseSqlServer(defaultConnectionString));
 
             services.AddDefaultIdentity<ApplicationIdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<AuthenticationDbContext>();
@@ -57,7 +49,7 @@ namespace movierama.server
 
             // Add our job
             services.AddSingleton<UpdateCountersJob>();
-            services.AddSingleton(new JobSchedule(jobType: typeof(UpdateCountersJob),cronExpression: "0/20 * * * * ?"));
+            services.AddSingleton(new JobSchedule(jobType: typeof(UpdateCountersJob), cronExpression: "0/20 * * * * ?"));
 
             services.AddHostedService<QuartzHostedService>();
         }

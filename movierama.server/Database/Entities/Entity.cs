@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Movierama.Server.Database.Entities
+﻿namespace Movierama.Server.Database.Entities
 {
     public class Entity
     {

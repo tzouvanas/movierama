@@ -1,4 +1,5 @@
-﻿namespace Movierama.Server.Models {
+﻿namespace Movierama.Server.Models
+{
     public enum ReviewAction
     {
         Like,

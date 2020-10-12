@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+﻿using System;
 
 namespace ExtensionMethods
 {
@@ -20,7 +19,7 @@ namespace ExtensionMethods
                     value = 1;
                     unit = "second";
                 }
-                else 
+                else
                 {
                     value = ts.Seconds;
                     unit = "seconds";
@@ -29,7 +28,7 @@ namespace ExtensionMethods
                 return (value, unit);
 
             }
-            
+
             if (delta < 60 * 2)
             {
                 value = 1;
@@ -43,7 +42,7 @@ namespace ExtensionMethods
                 unit = "minutes";
                 return (value, unit);
             }
-            
+
             if (delta < 90 * 60)
             {
                 value = 1;
@@ -57,14 +56,14 @@ namespace ExtensionMethods
                 unit = "hours";
                 return (value, unit);
             }
-           
+
             if (delta < 48 * 60 * 60)
             {
                 value = 1;
                 unit = "yesterday";
                 return (value, unit);
             }
-           
+
             if (delta < 30 * 24 * 60 * 60)
             {
                 value = ts.Days;
@@ -80,7 +79,8 @@ namespace ExtensionMethods
                     value = 1;
                     unit = "month";
                 }
-                else {
+                else
+                {
                     value = months;
                     unit = "months";
                 }

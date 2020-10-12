@@ -1,14 +1,10 @@
 ﻿using Movierama.Server.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Movierama.Server.Views.Home
 {
     public static class ReviewActionHiddenAttributeExtension
     {
-        public static string HiddenAttributeFor(string element, ReviewOpinion opinion) 
+        public static string HiddenAttributeFor(string element, ReviewOpinion opinion)
         {
             bool shouldBeHidden = false;
 

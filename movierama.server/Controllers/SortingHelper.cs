@@ -21,7 +21,8 @@ namespace Movierama.Server.Controllers
     {
         public static SortOrder SwapSortOrder(SortOrder sortOrder)
         {
-            switch (sortOrder) {
+            switch (sortOrder)
+            {
                 case SortOrder.Asc:
                     return SortOrder.Desc;
                 case SortOrder.Desc:
@@ -31,7 +32,7 @@ namespace Movierama.Server.Controllers
             return SortOrder.Asc;
         }
 
-        public static SortBy ResolveSortBy(string sortBy) 
+        public static SortBy ResolveSortBy(string sortBy)
         {
             if (string.IsNullOrEmpty(sortBy))
                 return SortBy.None;

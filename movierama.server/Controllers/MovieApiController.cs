@@ -1,12 +1,12 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using movierama.server.Models;
 using Movierama.Server.Database;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 using Movierama.Server.Repositories;
+using System;
+using System.Threading.Tasks;
 
 namespace Movierama.Server.Controllers
 {
