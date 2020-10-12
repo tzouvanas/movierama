@@ -3,7 +3,6 @@ using Quartz;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Movierama.Server.Repositories;
-using Movierama.Server.Services;
 
 namespace Movierama.Server.Quartz
 {

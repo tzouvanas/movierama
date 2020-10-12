@@ -19,7 +19,6 @@ using Quartz.Spi;
 using Quartz;
 using Movierama.Server.Quartz;
 using Quartz.Impl;
-using Movierama.Server.Services;
 
 namespace movierama.server
 {

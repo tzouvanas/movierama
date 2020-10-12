@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using movierama.server.Models;
 using Movierama.Server.Database;
-using Movierama.Server.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
+using Movierama.Server.Repositories;
 
 namespace Movierama.Server.Controllers
 {

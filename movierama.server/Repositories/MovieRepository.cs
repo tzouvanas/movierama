@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using movierama.server.Models;
+using Movierama.Server.Controllers;
 using Movierama.Server.Database.Entities;
 using Movierama.Server.Views.Home;
 using System;
@@ -11,7 +12,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
-namespace Movierama.Server.Services
+namespace Movierama.Server.Repositories
 {
     public class MovieRepository
     {

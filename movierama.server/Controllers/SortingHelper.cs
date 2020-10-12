@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Movierama.Server.Views.Home
+namespace Movierama.Server.Controllers
 {
     public enum SortBy
     {

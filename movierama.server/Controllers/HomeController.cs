@@ -10,12 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using movierama.server.Models;
+using Movierama.Server.Controllers;
 using Movierama.Server.Database;
 using Movierama.Server.Database.Entities;
 using Movierama.Server.Models;
 using Movierama.Server.Repositories;
-using Movierama.Server.Services;
-using Movierama.Server.Views.Home;
 
 namespace movierama.server.Controllers
 {
