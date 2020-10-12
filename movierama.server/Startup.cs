@@ -49,7 +49,7 @@ namespace movierama.server
 
             services.AddHttpContextAccessor();
 
-            services.AddSingleton<ReviewCache, ReviewCache>();
+            services.AddSingleton<ReviewActionCache, ReviewActionCache>();
 
             // Add Quartz services
             services.AddSingleton<IJobFactory, SingletonJobFactory>();

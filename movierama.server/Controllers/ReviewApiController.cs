@@ -38,15 +38,57 @@ namespace Movierama.Server.Controllers
         public async Task Review(int movieId, string reviewAction)
         {
             var userId = this.userManager.GetUserId(HttpContext.User);
+
+            var isValidRequest = this.IsValidReviewAction(userId, movieId, reviewAction);
+            if (!isValidRequest) throw new ArgumentException("Invalid review action", "reviewAction");
+
             var reviewActionValue = Enum.Parse<ReviewAction>(reviewAction);
 
-            // record in redis
-            //// var reviewCache = this.serviceProvider.GetService<ReviewCache>();
-            //// reviewCache.RecordReviewAction(userId, movieId, (int)reviewActionValue);
-
-            // directly persist in db
+            // persist in db
             var reviewRepository = new ReviewRepository(this.serviceProvider);
             await reviewRepository.PersistReviewActionAsync(userId, movieId, reviewActionValue);
+
+            // record value in cache
+            var reviewActionCache = this.serviceProvider.GetService<ReviewActionCache>();
+            reviewActionCache.Set(userId, movieId, reviewActionValue);
+        }
+
+        private bool IsValidReviewAction(string userId, int movieId, string reviewAction) 
+        {
+            ReviewAction reviewActionValue;
+            var isValidString = Enum.TryParse<ReviewAction>(reviewAction, out reviewActionValue);
+
+            if (!isValidString) return false;
+
+            var reviewActionCache = this.serviceProvider.GetService<ReviewActionCache>();
+
+            var lastReviewAction = reviewActionCache.Get(userId, movieId);
+
+            if (!lastReviewAction.HasValue)
+                return true;
+
+            bool result = true;
+            
+            if (lastReviewAction.HasValue) 
+            {
+                switch (lastReviewAction.Value) 
+                {
+                    case ReviewAction.Like:
+                        result = reviewActionValue == ReviewAction.Unlike;
+                        break;
+
+                    case ReviewAction.Hate:
+                        result = reviewActionValue == ReviewAction.Unhate;
+                        break;
+
+                    case ReviewAction.Unlike:
+                    case ReviewAction.Unhate:
+                        result = reviewActionValue == ReviewAction.Like || reviewActionValue == ReviewAction.Hate;
+                        break;
+                }
+            }
+
+            return result;
         }
     }
 }
